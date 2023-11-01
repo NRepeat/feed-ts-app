@@ -15,11 +15,26 @@ const parse = async (url: string) => {
 module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
   try {
     const { items } = await parse(feedUrl);
-    items.forEach(async (item) => {
-      const post = { ...item, contentEncoded: item['content:encoded'], contentEncodedSnippet: item['content:encodedSnippet'] };
-      await Post.create(post);
-    });
-    res.send({ data: items });
+    for (const item of items) {
+      const post = {
+        ...item,
+        contentEncoded: item['content:encoded'],
+        contentEncodedSnippet: item['content:encodedSnippet'],
+      };
+      console.log('🚀 ~ file: postController.ts:20 ~ module.exports.getAllPosts= ~  post :', post);
+
+      try {
+        const existingPost = await Post.findOne({ where: { guid: post.guid } });
+
+        if (existingPost) {
+          await Post.update(post, { where: { guid: post.guid } });
+        } else {
+          await Post.create(post);
+        }
+      } catch (error) {
+        console.error(`Ошибка при вставке/обновлении записи: ${error.message}`);
+      }
+    }
   } catch (error) {
     next(error);
   }
