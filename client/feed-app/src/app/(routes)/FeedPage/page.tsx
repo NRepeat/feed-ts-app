@@ -6,8 +6,8 @@ export default function page() {
   async function fetchData() {
     try {
       const posts = await postApi.getAllPosts();
-      console.log(posts.data[0].title);
-      return posts 
+      console.log(posts.data.data[0].title);
+      return posts
     } catch (error) {
       console.error("Error fetching posts:", error);
     }

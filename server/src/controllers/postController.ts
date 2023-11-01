@@ -5,9 +5,7 @@ const { Post } = require('../../models');
 const createHttpError = require('http-errors');
 const parser = new RSSParser();
 const feedUrl = 'https://netflixtechblog.com/feed';
-const data = {
-  contentEncoded: 'asdasd',
-};
+
 const parse = async (url: string) => {
   const feed = await parser.parseURL(url);
   return feed;
@@ -21,7 +19,6 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
         contentEncoded: item['content:encoded'],
         contentEncodedSnippet: item['content:encodedSnippet'],
       };
-      console.log('🚀 ~ file: postController.ts:20 ~ module.exports.getAllPosts= ~  post :', post);
 
       try {
         const existingPost = await Post.findOne({ where: { guid: post.guid } });
@@ -34,6 +31,12 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
       } catch (error) {
         console.error(`Ошибка при вставке/обновлении записи: ${error.message}`);
       }
+    }
+    try {
+      const posts = await Post.findAll();
+      res.send({ data: posts });
+    } catch (error) {
+      console.error(`Ошибка получении постов: ${error.message}`);
     }
   } catch (error) {
     next(error);
