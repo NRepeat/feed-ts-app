@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     link: DataTypes.STRING,
     pubDate: DataTypes.STRING,
-    contentEncoded: DataTypes.STRING,
-    contentEncodedSnippet: DataTypes.STRING,
+    contentEncoded: DataTypes.TEXT,
+    contentEncodedSnippet: DataTypes.TEXT,
     guid: DataTypes.STRING,
-    categories: DataTypes.ARRAY
+    categories: DataTypes.ARRAY(DataTypes.STRING)
   }, {
     sequelize,
     modelName: 'Post',

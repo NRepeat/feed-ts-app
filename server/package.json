@@ -18,6 +18,7 @@
     "http-errors": "^2.0.0",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
+    "redis": "^4.6.10",
     "rss-parser": "^3.13.0",
     "sequelize": "^6.33.0"
   },

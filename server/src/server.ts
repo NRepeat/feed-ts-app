@@ -1,17 +1,10 @@
-import express from 'express';
-const cors = require('cors');
-import { Request, Response } from 'express';
+const PORT = process.env.PORT || 5001;
 
-const bodyParser = express.json();
-const app = express();
-app.use(cors());
-app.use(bodyParser);
-app.use(express.static('public'));
-app.get('/', (req: Request, res: Response) => {
-  res.send('Application works!');
-});
+const appServer = require("./app");
 
 
-app.listen(3000, () => {
+
+
+appServer.listen(3000, () => {
   console.log('Application started on port 3000!');
 });
