@@ -1,20 +1,25 @@
 import React from 'react'
 import { postApi } from '../../../../api/postApi'
+import NewsCard from '@/app/components/NewsCard/newsCard'
+import Link from 'next/link'
 
-export default function page() {
 
-  async function fetchData() {
-    try {
-      const posts = await postApi.getAllPosts();
-      console.log(posts.data.data[0].title);
-      return posts
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    }
-  }
-  const posts = fetchData()
 
+export default async function page() {
+  const posts = await postApi.getAllPosts()
   return (
-    <div>page</div>
+    <div>
+      <ul>
+        {posts.data.data.map((post) => {
+          const encodedURL = encodeURIComponent(post.guid);
+          return <li key={post.guid}>
+            <Link href={`/FeedPage/${ encodedURL}`}>
+              <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
+            </Link>
+          </li>
+        })}
+      </ul>
+
+    </div>
   )
 }

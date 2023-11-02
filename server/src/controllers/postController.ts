@@ -42,3 +42,15 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
     next(error);
   }
 };
+module.exports.getPost = async (req: Request, res: Response, next: any) => {
+  try {
+    const { newsId } = req.params;
+
+    const news = await Post.findOne({
+      where: { guid: newsId },
+    });
+    res.send({ data:news });
+  } catch (error) {
+    console.log(createHttpError(404, error));
+  }
+};
