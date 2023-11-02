@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import 'dotenv/config';
 const { Token } = require('../../models');
 export const TokenService = {
@@ -37,23 +37,23 @@ export const TokenService = {
   },
   validateAccessToken: async (token) => {
     try {
-      const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+      const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET_KEY);
       return userData;
     } catch (e) {
       return null;
     }
   },
 
-  validateRefreshToken: async (token) => {
+  validateRefreshToken: async (token): Promise<any | JwtPayload> => {
     try {
-      const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+      const userData =  jwt.verify(token, process.env.JWT_REFRESH_SECRET_KEY);
       return userData;
     } catch (e) {
       return null;
     }
   },
   findToken: async (refreshToken) => {
-    const tokenData = await Token.findByPk({ where: { refreshToken: refreshToken } });
+    const tokenData = await Token.findOne({ where: { refreshToken: refreshToken } });
     return tokenData;
   },
 };

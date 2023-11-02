@@ -36,40 +36,22 @@ module.exports.logout = async (req: Request, res: Response, next: any) => {
     next(e);
   }
 };
-module.exports.refresh = async (req: Request, res: Response, next: any)=>{
+module.exports.refresh = async (req: Request, res: Response, next: any) => {
   try {
-      const {refreshToken} = req.cookies;
-      const userData = await UserService.refresh(refreshToken);
-      res.cookie('refreshToken', userData.refreshToken, {maxAge:  60 * 60 * 1000, httpOnly: true})
-      return res.json(userData);
+    const { refreshToken } = req.cookies;
+    const userData = await UserService.refresh(refreshToken);
+    res.cookie('refreshToken', userData.refreshToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
+    res.send({ data: userData });
   } catch (e) {
-      next(e);
+    next(e);
   }
-}
+};
 
-//   login: async (req: Request, res: Response, next: any) => {
-
-//     try {
-//     } catch (error) {
-//       next(error);
-//     }
-//   },
-//   logout: async (req: Request, res: Response, next: any) => {
-//     try {
-//     } catch (error) {
-//       next(error);
-//     }
-//   },
-//   activateLink: async (req: Request, res: Response, next: any) => {
-//     try {
-//     } catch (error) {
-//       next(error);
-//     }
-//   },
-//   refreshToken: async (req: Request, res: Response, next: any) => {
-//     try {
-//     } catch (error) {
-//       next(error);
-//     }
-//   },
-// };
+module.exports.getUsers = async (req, res, next) => {
+  try {
+    const users = await UserService.getAllUsers();
+    res.send({ data: users });
+  } catch (e) {
+    next(e);
+  }
+};

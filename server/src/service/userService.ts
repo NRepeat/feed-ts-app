@@ -59,7 +59,7 @@ export const UserService = {
     if (!refreshToken) {
       throw ApiError.UnauthorizedError();
     }
-    const userData = TokenService.validateRefreshToken(refreshToken);
+    const userData = await TokenService.validateRefreshToken(refreshToken);
     const tokenFromDb = await TokenService.findToken(refreshToken);
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError();
@@ -77,5 +77,9 @@ export const UserService = {
         isActivated,
       },
     };
+  },
+  getAllUsers: async () => {
+    const users = await User.findAll();
+    return users;
   },
 };

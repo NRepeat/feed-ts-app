@@ -1,19 +1,30 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
+import instanceApi from "./instance/instance";
 
 export const userApi = {
-  createUser: async () => {
+  login: async (
+    email: string,
+    password: string
+  ): Promise<AxiosResponse<AuthResponse> | undefined> => {
     try {
-      const payload = {
-        email: "nnazarov55@mail.com",
-        password: "user",
-      };
-
-      const response = await axios.post(
-        "http://localhost:5001/user/registration",
-        payload
-      );
-
-      console.log("Успешный ответ:", response.data);
+      return instanceApi.post<AuthResponse>("/login", { email, password });
+    } catch (error) {
+      console.error("Ошибка:", error);
+    }
+  },
+  registration: async (
+    email: string,
+    password: string
+  ): Promise<AxiosResponse<AuthResponse> | undefined> => {
+    try {
+      return instanceApi.post<AuthResponse>("/registration", { email, password });
+    } catch (error) {
+      console.error("Ошибка:", error);
+    }
+  },
+  logout: async (email: string, password: string): Promise<void> => {
+    try {
+      return instanceApi.post("/logout");
     } catch (error) {
       console.error("Ошибка:", error);
     }
