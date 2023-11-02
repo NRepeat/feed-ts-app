@@ -51,4 +51,31 @@ export const UserService = {
       },
     };
   },
+  logout: async (refreshToken) => {
+    const token = await TokenService.removeToken(refreshToken);
+    return token;
+  },
+  refresh: async (refreshToken) => {
+    if (!refreshToken) {
+      throw ApiError.UnauthorizedError();
+    }
+    const userData = TokenService.validateRefreshToken(refreshToken);
+    const tokenFromDb = await TokenService.findToken(refreshToken);
+    if (!userData || !tokenFromDb) {
+      throw ApiError.UnauthorizedError();
+    }
+    const user = await User.findByPk(userData.id);
+    const { email: userEmail, id, isActivated } = user;
+    const tokens = TokenService.generateTokens({ userEmail, id, isActivated });
+
+    await TokenService.saveToken(id, tokens.refreshToken);
+    return {
+      ...tokens,
+      user: {
+        userEmail,
+        id,
+        isActivated,
+      },
+    };
+  },
 };

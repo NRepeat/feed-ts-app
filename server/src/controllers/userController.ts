@@ -21,11 +21,31 @@ module.exports.login = async (req: Request, res: Response, next: any) => {
     const { email, password } = req.body;
     const userData = await UserService.login(email, password);
     res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
-    return res.json(userData);
+    res.send({ data: userData });
   } catch (e) {
     next(e);
   }
 };
+module.exports.logout = async (req: Request, res: Response, next: any) => {
+  try {
+    const { refreshToken } = req.cookies;
+    const token = await UserService.logout(refreshToken);
+    res.clearCookie('refreshToken');
+    res.send({ data: token });
+  } catch (e) {
+    next(e);
+  }
+};
+module.exports.refresh = async (req: Request, res: Response, next: any)=>{
+  try {
+      const {refreshToken} = req.cookies;
+      const userData = await UserService.refresh(refreshToken);
+      res.cookie('refreshToken', userData.refreshToken, {maxAge:  60 * 60 * 1000, httpOnly: true})
+      return res.json(userData);
+  } catch (e) {
+      next(e);
+  }
+}
 
 //   login: async (req: Request, res: Response, next: any) => {
 
