@@ -1,5 +1,7 @@
+import { userApi } from "../../api/userApi"
 
-export default function Home() {
+export default async function Home() {
+ const a = await userApi.createUser()
   return (
     <></>
   )

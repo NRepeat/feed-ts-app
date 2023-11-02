@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 const { Post } = require('../../models');
 const createHttpError = require('http-errors');
-const parse = require('../service/parser');
+import {parse} from "../service/parser"
+import 'dotenv/config'
 const feedUrl = process.env.FEED_URL;
 
 module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {

@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-  
+
     static associate(models) {
       User.hasMany(models.Token, {
         foreignKey: "userId",
@@ -30,7 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
-    isActivated: DataTypes.BOOLEAN,
+    isActivated: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     activationLink: DataTypes.STRING
   }, {
     sequelize,

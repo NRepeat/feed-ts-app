@@ -6,5 +6,5 @@ const appServer = require("./app");
 
 
 appServer.listen(PORT, () => {
-  console.log('Application started on port 3000!');
+  console.log(`Application started on port ${PORT}!`);
 });
