@@ -1,15 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import RSSParser from 'rss-parser';
-
 const { Post } = require('../../models');
 const createHttpError = require('http-errors');
-const parser = new RSSParser();
-const feedUrl = 'https://netflixtechblog.com/feed';
+const parse = require('../service/parser');
+const feedUrl = process.env.FEED_URL;
 
-const parse = async (url: string) => {
-  const feed = await parser.parseURL(url);
-  return feed;
-};
 module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
   try {
     const { items } = await parse(feedUrl);
@@ -49,7 +43,7 @@ module.exports.getPost = async (req: Request, res: Response, next: any) => {
     const news = await Post.findOne({
       where: { guid: newsId },
     });
-    res.send({ data:news });
+    res.send({ data: news });
   } catch (error) {
     console.log(createHttpError(404, error));
   }

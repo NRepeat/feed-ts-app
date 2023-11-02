@@ -1,3 +1,5 @@
+
+
 import { postApi } from '../../../../../api/postApi'
 import parse, { DOMNode, Element, HTMLReactParserOptions, domToReact } from 'html-react-parser';
 import { Source_Code_Pro } from 'next/font/google'
@@ -19,6 +21,8 @@ interface Params {
   }
 }
 export default async function News({ params: { newsId } }: Params) {
+
+  
   const posts = await postApi.getNews(newsId);
   const options: HTMLReactParserOptions = {
     replace(domNode) {
