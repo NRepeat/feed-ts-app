@@ -1,25 +1,24 @@
 import React from 'react'
 import { postApi } from '../../api/postApi'
-import NewsCard from '@/app/components/NewsCard/newsCard'
-import Link from 'next/link'
+
+import SortableList from '@/app/components/Sort/sort'
 
 
 
 export default async function page() {
-  const posts = await postApi  .getAllPosts()
+  const posts = await postApi.getAllPosts().then((posts) => {
+    return posts.data.data.sort((a: Post, b: Post) => {
+      const dateA = new Date(a.pubDate).getTime();
+      const dateB = new Date(b.pubDate).getTime();
+      return dateB - dateA;
+    })
+  })
+
+
   return (
     <div>
-      <ul>
-        {posts.data.data.map((post) => {
-          const encodedURL = encodeURIComponent(post.guid);
-          return <li key={post.guid}>
-            <Link href={`/FeedPage/${ encodedURL}`}>
-              <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
-            </Link>
-          </li>
-        })}
-      </ul>
 
+      <SortableList data={posts} />
     </div>
   )
 }
