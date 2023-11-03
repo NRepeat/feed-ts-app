@@ -18,9 +18,7 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
       try {
         const existingPost = await Post.findOne({ where: { guid: post.guid } });
 
-        if (existingPost) {
-          await Post.update(post, { where: { guid: post.guid } });
-        } else {
+        if (!existingPost) {
           await Post.create(post);
         }
       } catch (error) {
@@ -47,5 +45,30 @@ module.exports.getPost = async (req: Request, res: Response, next: any) => {
     res.send({ data: news });
   } catch (error) {
     console.log(createHttpError(404, error));
+  }
+};
+module.exports.update = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log('🚀 ~ file: postController.ts:61 ~ module.exports.update= ~ req.body:', req.body);
+
+    const { title, content, guid } = req.body;
+
+    const existingPost = await Post.findOne({ where: { guid: guid } });
+
+    if (!existingPost) {
+      return res.status(404).json({ error: 'Пост не найден' });
+    }
+
+    // Обновляем свойства поста
+    existingPost.title = title;
+    existingPost.content = content;
+
+    // Сохраняем обновленный пост
+    await existingPost.save();
+
+    res.json({ message: 'Пост успешно обновлен', data: existingPost });
+  } catch (error) {
+    console.error(`Ошибка при обновлении поста: ${error.message}`);
+    next(error);
   }
 };
