@@ -1,4 +1,4 @@
-import { postApi } from '../../../../../api/postApi'
+import { postApi } from '../../../api/postApi'
 import parse, { DOMNode, Element, HTMLReactParserOptions, domToReact } from 'html-react-parser';
 import { Source_Code_Pro } from 'next/font/google'
 import { URL } from 'url';

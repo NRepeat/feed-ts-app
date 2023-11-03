@@ -1,12 +1,12 @@
 import React from 'react'
-import { postApi } from '../../../../api/postApi'
+import { postApi } from '../../api/postApi'
 import NewsCard from '@/app/components/NewsCard/newsCard'
 import Link from 'next/link'
 
 
 
 export default async function page() {
-  const posts = await postApi.getAllPosts()
+  const posts = await postApi  .getAllPosts()
   return (
     <div>
       <ul>
