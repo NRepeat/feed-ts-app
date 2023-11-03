@@ -7,7 +7,6 @@ interface PreviewNews {
 }
 
 interface Post {
-  
   title: string;
   guid: string;
   categories: [];

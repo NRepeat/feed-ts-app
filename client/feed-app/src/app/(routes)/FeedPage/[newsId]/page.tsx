@@ -1,7 +1,6 @@
 import { postApi } from '../../../api/postApi'
 import parse, { DOMNode, Element, HTMLReactParserOptions, domToReact } from 'html-react-parser';
 import { Source_Code_Pro } from 'next/font/google'
-import { URL } from 'url';
 
 
 
@@ -15,7 +14,7 @@ const sourseCode = Source_Code_Pro({
 
 interface Params {
   params: {
-    newsId: URL
+    newsId: string
   }
 }
 export default async function News({ params: { newsId } }: Params) {

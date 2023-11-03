@@ -1,7 +1,7 @@
 import React from 'react'
 import { postApi } from '../../api/postApi'
+import SortableList from '@/app/components/SortList/sort';
 
-import SortableList from '@/app/components/Sort/sort'
 
 
 

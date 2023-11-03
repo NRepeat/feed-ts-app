@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 interface Posts {
   data: Post[];
@@ -22,7 +22,7 @@ export const postApi = {
       throw error;
     }
   },
-  getNews: async (newsId: any) => {
+  getNews: async (newsId: string) => {
     try {
       const response = await axios.get<PostReq>(`${url}posts/${newsId}`);
 
@@ -32,4 +32,13 @@ export const postApi = {
       throw error;
     }
   },
+ update: async ({guid,newTitle}:any): Promise<AxiosResponse<PostReq>>=> {
+  try {
+    const response = await axios.put<PostReq>(`${url}posts/update`, { title: newTitle,guid });
+    return response;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
 };
