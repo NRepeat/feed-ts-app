@@ -6,9 +6,10 @@ import Link from 'next/link'
 export default async function SigninComp() {
   return (
     <>
-      <GoogleButton />
       <SignForm />
-      <Link href={'/registration'}>or registration</Link>
+      <GoogleButton />
+
+      <Link href={'/registration'}>or Registration</Link>
 
     </>
   )

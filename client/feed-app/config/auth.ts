@@ -37,7 +37,7 @@ export const autchConfig: any = {
   ],
 
   pages: {
-    signIn: "/Signin",
+    signIn: "/signin",
   },
 
 };

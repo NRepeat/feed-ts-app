@@ -8,8 +8,8 @@ import { postApi } from '@/app/api/postApi'
 async function ModeratoPage() {
   const session: any = await getServerSession(autchConfig)
   const moderator: any = await userApi.getUser(session?.user.email)
-  
-  const role = moderator?.data.data.role
+  let role = ""
+  moderator?.data.data.role ? role = moderator?.data.data.role : role = "customer"
   if (role === "moderator") {
     const posts = await postApi.getAllPosts().then((posts) => {
       return posts.data.data.sort((a: Post, b: Post) => {
@@ -20,7 +20,7 @@ async function ModeratoPage() {
     })
     return (
       <>
-        <ModeratorDashBoard role={role} posts = {posts} />
+        <ModeratorDashBoard role={role} posts={posts} />
       </>
     )
 

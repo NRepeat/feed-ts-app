@@ -3,7 +3,7 @@
 import React, { FormEventHandler } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface MyFormValues {
   email: string;
@@ -13,10 +13,12 @@ interface MyFormValues {
 function SignForm() {
   const initialValues: MyFormValues = { email: '', password: '' };
   const router = useRouter();
-
+  const param = useSearchParams()
+  const callback = param.get("callbackUrl")
+  console.log("🚀 ~ file: signForm.tsx:18 ~ SignForm ~ callback:", callback)
   const handleSubmitForm = async (values: any, event: any) => {
     const res = await signIn('credentials', {
-      email:values.email      ,
+      email: values.email,
       password: values.password,
       redirect: false
     });
@@ -27,10 +29,12 @@ function SignForm() {
   };
 
   return (
-    <Formik
+    <> 
+      {callback && <strong>To view the news please log in</strong>}
+      <Formik
       initialValues={initialValues}
       onSubmit={(values, actions) => {
-        handleSubmitForm(values,actions);
+        handleSubmitForm(values, actions);
       }}
     >
       <Form>
@@ -41,6 +45,8 @@ function SignForm() {
         <button type="submit">Submit</button>
       </Form>
     </Formik>
+      </>
+  
   );
 }
 

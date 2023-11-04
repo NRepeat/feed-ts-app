@@ -38,7 +38,6 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
 module.exports.getPost = async (req: Request, res: Response, next: any) => {
   try {
     const { newsId } = req.params;
-    console.log("🚀 ~ file: postController.ts:41 ~ module.exports.getPost= ~  newsId :", req.params )
 
     const news = await Post.findOne({
       where: { guid: newsId },
@@ -50,9 +49,8 @@ module.exports.getPost = async (req: Request, res: Response, next: any) => {
 };
 module.exports.update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('🚀 ~ file: postController.ts:61 ~ module.exports.update= ~ req.body:', req.body);
 
-    const { title, content, guid } = req.body;
+    const { news, guid } = req.body;
 
     const existingPost = await Post.findOne({ where: { guid: guid } });
 
@@ -60,11 +58,9 @@ module.exports.update = async (req: Request, res: Response, next: NextFunction) 
       return res.status(404).json({ error: 'Пост не найден' });
     }
 
-    // Обновляем свойства поста
-    existingPost.title = title;
-    existingPost.content = content;
+    existingPost.contentEncoded = news
+ 
 
-    // Сохраняем обновленный пост
     await existingPost.save();
 
     res.json({ message: 'Пост успешно обновлен', data: existingPost });

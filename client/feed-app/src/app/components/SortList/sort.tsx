@@ -67,24 +67,30 @@ function SortableList({ data }: SortableListProps) {
 
 
   return (
-    <div>
-      <div>
-        <input
-          type="text"
-          placeholder="Поиск"
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
+    <div className="w-screen flex flex-col justify-center items-center">
+      <div className="flex justify-evenly w-full">
+
+        <select onChange={handleSortChange}>
+          <option value="dateReverse">Сортировать по дате по убыванию</option>
+          <option value="date">Сортировать по дате по возрастанию</option>
+          <option value="title">Сортировать по заголовку</option>
+        </select>
+        <div>
+          <input
+          className="h-8"
+            type="text"
+            placeholder="Поиск"
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
       </div>
-      <select onChange={handleSortChange}>
-        <option value="dateReverse">Сортировать по дате по убыванию</option>
-        <option value="date">Сортировать по дате по возрастанию</option>
-        <option value="title">Сортировать по заголовку</option>
-      </select>
-      <ul>
+
+
+      <ul className="flex min-h-screen w-3/4 gap-6 items-center flex-row flex-wrap">
         {filteredData.map((post: Post) => (
           <li key={post.guid}>
-            <div>
+            <div style={{ height: "220px", width: "200px" }} className="  rounded border-solid border-2 border-cyan-200">
               <Link href={`/feed/${encodeURIComponent(post.guid)}`}>
                 <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
               </Link>

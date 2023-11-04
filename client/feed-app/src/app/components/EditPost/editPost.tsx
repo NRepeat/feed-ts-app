@@ -7,6 +7,8 @@ import SaveButton from "../SaveButton/savebutton";
 
 export default function EditPostS() {
   const [news, setNews] = useState('')
+  const [newNews, setNewNews] = useState('')
+  const [newsId, setNewsId] = useState('')
   const searchParams = useSearchParams()
   const search: any = searchParams.get('news')
 
@@ -17,6 +19,8 @@ export default function EditPostS() {
       try {
         const news = await postApi.getNews(encodeURIComponent(search))
         setNews(news.data.data.contentEncoded)
+        setNewNews(news.data.data.contentEncoded)
+        setNewsId(news.data.data.guid)
 
       } catch (error) {
         console.log(error)
@@ -27,17 +31,20 @@ export default function EditPostS() {
     fetchNews()
   }, [])
   const handleTitleChange = (e: any) => {
-    setNews(e.target.value);
+    setNewNews(e.target.value);
 
   };
   return (
-    <div className='flex'>
-      <div style={{ height: "93vh" }} className='w-1/2  overflow-auto  p-5' >
-        {parse(news)}
-      </div>
-      <textarea style={{ height: "93vh", maxHeight: "93vh" }} className='w-1/2  overflow-auto  p-5 ' value={news} onChange={handleTitleChange} />
+    <div className='flex flex-col'>
+      <div className='flex'>
+        <div style={{ height: "93vh" }} className='w-1/2  overflow-auto  p-5' >
+          {parse(newNews)}
+        </div>
+        <textarea style={{ height: "93vh", maxHeight: "93vh" }} className='w-1/2  overflow-auto  p-5 ' value={newNews} onChange={handleTitleChange} />
 
-      <div onMouseEnter={() => {
+
+      </div>
+      {!news.includes(newNews) && <div onMouseEnter={() => {
         const group = document.querySelector('.group');
         if (group) {
           group.classList.add('bg-blue-500');
@@ -50,10 +57,11 @@ export default function EditPostS() {
           }
         }
         } className='fixed bottom-0 w-full h-20 flex justify-center items-center bg-black group'>
-   
-        <SaveButton  news={news}></SaveButton>
 
-      </div>
+        <SaveButton news={{ newNews, newsId }}></SaveButton>
+
+      </div>}
     </div>
+
   );
 }
