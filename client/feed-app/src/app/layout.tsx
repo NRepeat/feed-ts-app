@@ -1,4 +1,4 @@
-import { Provider } from './components/Provider/provider'
+import { Provider } from './Provider/provider'
 import './globals.css'
 
 

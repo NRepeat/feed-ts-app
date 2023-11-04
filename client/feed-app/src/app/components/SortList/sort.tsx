@@ -16,8 +16,6 @@ interface SortableListProps {
 
 function SortableList({ data, isModerator }: SortableListProps): JSX.Element {
   const { data: sortedData, sortData, toggleSortDirection, isAscending, isSortByTitle } = useSortableData(data);
-const session = useSession()
-  console.log("🚀 ~ file: sort.tsx:20 ~ SortableList ~ session:", session)
   const { filteredData, searchQuery, handleSearch } = useSearch(sortedData);
   const [editingPostId, setEditingPostId] = useState<string | null>(null)
   useEffect(() => {

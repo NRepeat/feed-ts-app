@@ -1,10 +1,9 @@
-const { User, Token } = require('../../models');
+const { User } = require('../../models');
 const ApiError = require('../error/api-error');
 import 'dotenv/config';
 const bcrypt = require('bcrypt');
-import { TokenService } from './tokenService';
 export const UserService = {
-  registration: async (email: string, passwrod: string) => {
+  registration: async (email: string, passwrod: string, displayName: string, role: string, moderatorCode) => {
     const candidate = await User.findOne({
       where: {
         email: email,
@@ -13,18 +12,18 @@ export const UserService = {
     if (candidate) {
       throw ApiError.BadRequest(`User with this email:${email} exist `);
     }
-    const hashPassword = await bcrypt.hash(passwrod, 3);
 
-    const newUser = await User.create({ email, password: hashPassword });
-    const { email: userEmail, id, isActivated } = newUser;
-    const tokens = TokenService.generateTokens({ userEmail, id, isActivated });
-    await TokenService.saveToken(id, tokens.refreshToken);
+    moderatorCode ? (role = process.env.MODERATOR_ROLE) : (role = process.env.CUSTOMER_ROLE);
+    const hashPassword = await bcrypt.hash(passwrod, 3);
+    const newUser = await User.create({ email, password: hashPassword, displayName, role });
+    const { email: userEmail, id, displayName: displayUserName, role: userRole } = newUser;
+
     return {
-      ...tokens,
       user: {
         userEmail,
         id,
-        isActivated,
+        displayUserName,
+        userRole,
       },
     };
   },
@@ -38,48 +37,25 @@ export const UserService = {
     if (!isPassEquals) {
       throw ApiError.BadRequest('Неверный пароль');
     }
-    const { email: userEmail, id, isActivated } = user;
-    const tokens = TokenService.generateTokens({ userEmail, id, isActivated });
+    const { email: userEmail, id, role, displayName } = user;
 
-    await TokenService.saveToken(id, tokens.refreshToken);
     return {
-      ...tokens,
       user: {
         userEmail,
         id,
-        isActivated,
+        role,
+        displayName,
       },
     };
+    
   },
-  logout: async (refreshToken) => {
-    const token = await TokenService.removeToken(refreshToken);
-    return token;
+  getUser: async (email: any) => {
+    const user = await User.findOne({ where: { email: email } });
+    return user;
   },
-  refresh: async (refreshToken) => {
-    if (!refreshToken) {
-      throw ApiError.UnauthorizedError();
-    }
-    const userData = await TokenService.validateRefreshToken(refreshToken);
-    const tokenFromDb = await TokenService.findToken(refreshToken);
-    if (!userData || !tokenFromDb) {
-      throw ApiError.UnauthorizedError();
-    }
-    const user = await User.findByPk(userData.id);
-    const { email: userEmail, id, isActivated } = user;
-    const tokens = TokenService.generateTokens({ userEmail, id, isActivated });
+  // logout: async (refreshToken) => {
+  //   const token = await TokenService.removeToken(refreshToken);
+  //   return token;
+  // },
 
-    await TokenService.saveToken(id, tokens.refreshToken);
-    return {
-      ...tokens,
-      user: {
-        userEmail,
-        id,
-        isActivated,
-      },
-    };
-  },
-  getAllUsers: async () => {
-    const users = await User.findAll();
-    return users;
-  },
 };

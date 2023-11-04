@@ -7,33 +7,38 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       email: {
         type: Sequelize.STRING,
         unique: true,
+        allowNull: true,
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true,
       },
-      isActivated: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+
+      displayName: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      activationLink: {
-        type: Sequelize.STRING
+      role: {
+        type: Sequelize.ENUM('customer', 'moderator'),
+        allowNull: false,
       },
+
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
-  }
+  },
 };

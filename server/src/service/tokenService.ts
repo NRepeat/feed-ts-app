@@ -1,59 +1,35 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import 'dotenv/config';
-const { Token } = require('../../models');
+const { Status } = require('../../models');
 export const TokenService = {
-  generateTokens: (payload: any) => {
-    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET_KEY, { expiresIn: '30m' });
-    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET_KEY, { expiresIn: '130m' });
-    return {
-      accessToken,
-      refreshToken,
-    };
-  },
-  saveToken: async (userId, refreshToken) => {
+  saveStatus: async (userId, status) => {
     try {
-      const tokenData = await Token.findOne({
+      const statusData = await Status.findOne({
         where: {
           userId: userId,
         },
       });
-      if (tokenData) {
-        await tokenData.update({ refreshToken: refreshToken });
+      if (statusData) {
+        await statusData.update({ status: status });
       } else {
-        const token = await Token.create({
+        const userStatus = await Status.create({
           userId: userId,
-          refreshToken: refreshToken,
+          status: status,
         });
-        return token;
+        return  userStatus;
       }
     } catch (error) {
       console.error('Error:', error);
       throw error;
     }
   },
-  removeToken: async (refreshToken) => {
-    const tokenData = await Token.destroy({ where: { refreshToken: refreshToken } });
-    return tokenData;
-  },
-  validateAccessToken: async (token) => {
-    try {
-      const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET_KEY);
-      return userData;
-    } catch (e) {
-      return null;
-    }
+  removeStatus: async (status) => {
+    const userStatus = await Status.destroy({ where: {  status: status } });
+    return userStatus;
   },
 
-  validateRefreshToken: async (token): Promise<any | JwtPayload> => {
-    try {
-      const userData =  jwt.verify(token, process.env.JWT_REFRESH_SECRET_KEY);
-      return userData;
-    } catch (e) {
-      return null;
-    }
-  },
-  findToken: async (refreshToken) => {
-    const tokenData = await Token.findOne({ where: { refreshToken: refreshToken } });
-    return tokenData;
+
+  findStatus: async (status) => {
+    const userStatus = await Status.findOne({ where: {  status: status } });
+    return userStatus;
   },
 };

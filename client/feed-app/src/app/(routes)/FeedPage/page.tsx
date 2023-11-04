@@ -1,15 +1,13 @@
-import { postApi } from '../../../../api/postApi'
 import NewsCard from '@/app/components/NewsCard/newsCard'
 import Link from 'next/link'
 import React from 'react'
-import { postApi } from '../../api/postApi'
 import SortableList from '@/app/components/SortList/sort';
+import { postApi } from '@/app/api/postApi';
 
 
 
 export default async function page() {
   
-  const posts = await postApi.getAllPosts()
   const posts = await postApi.getAllPosts().then((posts) => {
     return posts.data.data.sort((a: Post, b: Post) => {
       const dateA = new Date(a.pubDate).getTime();
@@ -22,7 +20,7 @@ export default async function page() {
   return (
     <div>
 
-      <SortableList data={posts} />
+      <SortableList data={posts} isModerator={true}/>
     </div>
   )
 }

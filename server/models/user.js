@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   class User extends Model {
 
     static associate(models) {
-      User.hasMany(models.Token, {
+      User.hasMany(models.Status, {
         foreignKey: "userId",
         onDelete: "cascade",
         onUpdate: "cascade",
@@ -30,11 +30,14 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
-    isActivated: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    role: {
+      type: DataTypes.ENUM('customer', 'moderator'),
+      allowNull: false,
     },
-    activationLink: DataTypes.STRING
+    displayName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'User',
