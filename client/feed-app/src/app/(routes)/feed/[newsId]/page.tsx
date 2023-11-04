@@ -3,6 +3,12 @@
 import { postApi } from '../../../api/postApi'
 import parse, { DOMNode, Element, HTMLReactParserOptions, domToReact } from 'html-react-parser';
 import { Source_Code_Pro } from 'next/font/google'
+import { autchConfig } from '../../../../../config/auth';
+import { getServerSession } from 'next-auth';
+import { userApi } from '@/app/api/userApi';
+import EditPostS from '@/app/components/EditPost/editPost';
+import Link from 'next/link';
+import ModeratoPage from '../../moderator/page';
 
 
 
@@ -20,8 +26,10 @@ interface Params {
   }
 }
 export default async function News({ params: { newsId } }: Params) {
+  console.log("🚀 ~ file: page.tsx:29 ~ News ~ newsId:", newsId)
+  const session: any = await getServerSession(autchConfig)
+  const moderator: any = await userApi.getUser(session?.user.email)
 
-  
   const posts = await postApi.getNews(newsId);
   const options: HTMLReactParserOptions = {
     replace(domNode) {
@@ -43,6 +51,7 @@ export default async function News({ params: { newsId } }: Params) {
 
     },
   };
+
   return (
     <div>
       {parse(posts.data.data.title)}
@@ -64,7 +73,7 @@ export async function generateStaticParams() {
         newsId: decodedNewsId
 
       },
-      revalidate: 10,
+      revalidate: 200,
     }
   })
 }

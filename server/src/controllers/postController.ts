@@ -38,6 +38,7 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
 module.exports.getPost = async (req: Request, res: Response, next: any) => {
   try {
     const { newsId } = req.params;
+    console.log("🚀 ~ file: postController.ts:41 ~ module.exports.getPost= ~  newsId :", req.params )
 
     const news = await Post.findOne({
       where: { guid: newsId },

@@ -1,25 +1,44 @@
-"use client"
-import React, { useState, useEffect } from "react";
+'use client'
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import NewsCard from "../NewsCard/newsCard";
 import useSortableData from "@/app/hooks/sortHook";
 import useSearch from "@/app/hooks/searchHook";
 import EditPostForm from "../EditPostFormProps/editPostFormProps";
 import { postApi } from "@/app/api/postApi";
+import { userApi } from "@/app/api/userApi";
 import { useSession } from "next-auth/react";
-
-
 interface SortableListProps {
   data: Post[];
-  isModerator: boolean
 }
 
-function SortableList({ data, isModerator }: SortableListProps): JSX.Element {
+function SortableList({ data }: SortableListProps) {
   const { data: sortedData, sortData, toggleSortDirection, isAscending, isSortByTitle } = useSortableData(data);
   const { filteredData, searchQuery, handleSearch } = useSearch(sortedData);
-  const [editingPostId, setEditingPostId] = useState<string | null>(null)
-  useEffect(() => {
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const { data: user }: any = useSession();
+  const [moderator, setModerator] = useState<any | any>({});
 
+  useEffect(() => {
+    const fetchModerator = async () => {
+      if (user) {
+        try {
+
+          const moderator = await userApi.getUser(user.user.email);
+          setModerator(moderator?.data.data.role);
+        } catch (error) {
+          console.error("Error fetching moderator:", error);
+        }
+      }
+    };
+
+    if (user) {
+      fetchModerator(); 
+    }
+  }, [user]);
+
+
+  useEffect(() => {
     const savedSortOrder = localStorage.getItem("sortOrder");
     if (savedSortOrder) {
       if (savedSortOrder === "ascending") {
@@ -34,28 +53,11 @@ function SortableList({ data, isModerator }: SortableListProps): JSX.Element {
           const dateB = new Date(b.pubDate).getTime();
           return dateA - dateB;
         });
-
       } else {
         sortData((a: Post, b: Post) => a.title.localeCompare(b.title));
       }
     }
   }, []);
-
-  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedSort = event.target.value;
-    if (selectedSort === "dateReverse") {
-      toggleSortDirection();
-      sortDataByDate();
-      localStorage.setItem("sortOrder", isAscending ? "ascending" : "descending");
-    } else if (selectedSort === "date") {
-      toggleSortDirection();
-      sortDataByDate();
-      localStorage.setItem("sortOrder", isAscending ? "ascending" : "descending");
-    } else if (selectedSort === "title") {
-      sortDataByTitle();
-      localStorage.setItem("sortOrder", isSortByTitle ? "title" : "notTitle");
-    }
-  };
 
   const sortDataByDate = () => {
     sortData((a: Post, b: Post) => {
@@ -69,18 +71,26 @@ function SortableList({ data, isModerator }: SortableListProps): JSX.Element {
     sortData((a: Post, b: Post) => a.title.localeCompare(b.title));
   };
 
+  const handleSortChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSort = event.target.value;
+    if (selectedSort === "dateReverse") {
+      toggleSortDirection();
+      sortDataByDate();
+      localStorage.setItem("sortOrder", isAscending ? "ascending" : "descending");
+    } else if (selectedSort === "date") {
+      toggleSortDirection();
+      sortDataByDate();
+      localStorage.setItem("sortOrder", isAscending ? "ascending" : "descending");
+    } else if (selectedSort === "title") {
+      sortDataByTitle();
+      localStorage.setItem("sortOrder", isSortByTitle ? "title" : "notTitle");
+    }
+  }, [toggleSortDirection, sortDataByDate, isAscending, sortDataByTitle, isSortByTitle]);
+
   const handleEditPost = (postId: string) => {
     setEditingPostId(postId);
   };
 
-  const handleCancelEdit = () => {
-    setEditingPostId(null);
-  };
-
-  const handleSaveEdit = () => {
-
-    setEditingPostId(null);
-  };
   return (
     <div>
       <div>
@@ -100,17 +110,17 @@ function SortableList({ data, isModerator }: SortableListProps): JSX.Element {
       <ul>
         {filteredData.map((post: Post) => (
           <li key={post.guid}>
-            {isModerator && editingPostId === post.guid ? (
+            {moderator === "moderator" && editingPostId === post.guid ? (
               <div>
                 <EditPostForm
                   initialTitle={post.title}
                   onSave={(newTitle) => {
-                    const { guid } = post
-    
+                    const { guid } = post;
                     const props = {
-                      newTitle, guid
-                    }
-                    postApi.update(props)
+                      newTitle,
+                      guid
+                    };
+                    postApi.update(props);
                     setEditingPostId(null);
                   }}
                   onCancel={() => setEditingPostId(null)}
@@ -118,10 +128,10 @@ function SortableList({ data, isModerator }: SortableListProps): JSX.Element {
               </div>
             ) : (
               <div>
-                <Link href={`/FeedPage/${encodeURIComponent(post.guid)}`}>
-                  <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
+                <Link href={`/feed/${encodeURIComponent(post.guid)}`}>
+                  <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title}  />
                 </Link>
-                {isModerator && (
+                {moderator === "moderator" && (
                   <button onClick={() => handleEditPost(post.guid)}>Редактировать</button>
                 )}
               </div>
@@ -132,5 +142,4 @@ function SortableList({ data, isModerator }: SortableListProps): JSX.Element {
     </div>
   );
 }
-
 export default SortableList;

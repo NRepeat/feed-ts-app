@@ -34,10 +34,10 @@ function SignForm() {
       }}
     >
       <Form>
-        <label htmlFor="email">Email</label>
-        <Field type="email" id="email" name="email" placeholder="Email" required />
-        <label htmlFor="password">Password</label>
-        <Field type="password" id="password" name="password" placeholder="Password" required />
+        <label htmlFor="LoginEmail">Email</label>
+        <Field type="email" id="LoginEmail" name="LoginEmail" placeholder="Email" required />
+        <label htmlFor="LoginPassword">Password</label>
+        <Field type="password" id="LoginPassword" name="LoginPassword" placeholder="Password" required />
         <button type="submit">Submit</button>
       </Form>
     </Formik>

@@ -1,21 +1,25 @@
-import { Provider } from './Provider/provider'
 import './globals.css'
+import { ProviderSession } from './provider/provider'
+import Footer from "@/app/components/Footer/footer"
 
 
-
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
   return (
 
-    <html lang="en">
-      <Provider>
-        <body >{children}</body>
 
-      </Provider>
+    <html lang="en">
+      <body>
+        <ProviderSession>
+            {children}
+        </ProviderSession>
+        <Footer/>
+      </body>
     </html>
+
   )
 }

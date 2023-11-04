@@ -42,7 +42,7 @@ function RegistrationForm() {
           redirect: false,
         });
         if (res && !res.error) {
-          router.push('/FeedPage');
+          router.push('/feed');
         } else {
           console.log(res);
         }

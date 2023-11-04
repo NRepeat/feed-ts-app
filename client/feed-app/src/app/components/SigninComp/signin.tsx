@@ -1,6 +1,5 @@
 import React from 'react'
 import GoogleButton from '../GoogleButton/googleButton'
-import RegistrationForm from '../RegestrationForm/registrationForm'
 import SignForm from '../SignForm/signForm'
 import Link from 'next/link'
 
@@ -9,7 +8,7 @@ export default async function SigninComp() {
     <>
       <GoogleButton />
       <SignForm />
-      <Link href={'/Registration'}>or registration</Link>
+      <Link href={'/registration'}>or registration</Link>
 
     </>
   )

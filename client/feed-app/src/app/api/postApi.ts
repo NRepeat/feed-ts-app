@@ -22,10 +22,12 @@ export const postApi = {
       throw error;
     }
   },
-  getNews: async (newsId: string) => {
+  getNews: async (newsId: string|null) => {
+    console.log("🚀 ~ file: postApi.ts:26 ~ getNews: ~ newsId:", newsId)
     try {
       const response = await axios.get<PostReq>(`${url}posts/${newsId}`);
 
+      console.log("🚀 ~ file: postApi.ts:30 ~ getNews: ~ response:", response)
       return response;
     } catch (error) {
       console.error("Error:", error);

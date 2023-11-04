@@ -4,9 +4,9 @@ export const userApi = {
   login: async (
     email: string,
     password: string
-  ): Promise<AxiosResponse<AuthResponse> | undefined> => {
+  ): Promise<AxiosResponse<AxiosResponse> | undefined> => {
     try {
-      const res = await axios.post<AuthResponse>(`${SERVER_URL}/user/login`, {
+      const res = await axios.post(`${SERVER_URL}/user/login`, {
         email,
         password,
       });
@@ -20,9 +20,9 @@ export const userApi = {
     password: string,
     name: string,
     moderatorCode: string
-  ): Promise<AxiosResponse<AuthResponse> | undefined> => {
+  ): Promise<AxiosResponse<AuthenticatorResponse> | undefined> => {
     try {
-      const req = await axios.post<AuthResponse>(
+      const req = await axios.post<AuthenticatorResponse>(
         `${SERVER_URL}/user/registration`,
         { email, password, name, moderatorCode }
       );
@@ -40,7 +40,7 @@ export const userApi = {
   },
   getUser: async (email: any) => {
     try {
-      const req = await axios.get<AuthResponse>(
+      const req = await axios.get(
         `${SERVER_URL}/user/getUser/${email}`
       );
       return req;

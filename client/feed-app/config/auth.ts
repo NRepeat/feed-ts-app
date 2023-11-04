@@ -39,17 +39,5 @@ export const autchConfig: any = {
   pages: {
     signIn: "/Signin",
   },
-  callbacks: {
-    async signIn(profile, account, metadata) {
-      const userGoogleData = {
-        id: profile.user.id,
-        name: profile.user.name,
-        email: profile.user.email,
-      };
-      const mod =""
-      const user: any = await userApi.registration(profile.user.email,profile.user.name,profile.user.name,mod);
 
-      return user;
-    },
-  },
 };

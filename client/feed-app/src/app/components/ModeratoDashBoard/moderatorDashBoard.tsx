@@ -1,22 +1,17 @@
-import { postApi } from '@/app/api/postApi';
 import React from 'react'
-import SortableList from '../SortList/sort';
-import EditPostS from '../EditPost/editPost';
+import Link from 'next/link';
+import NewsCard from '../NewsCard/newsCard';
 
-async function ModeratorDashBoard() {
-  const posts = await postApi.getAllPosts().then((posts) => {
-    return posts.data.data.sort((a: Post, b: Post) => {
-      const dateA = new Date(a.pubDate).getTime();
-      const dateB = new Date(b.pubDate).getTime();
-      return dateB - dateA;
-    })
-  })
-  const isModerator = true
+async function ModeratorDashBoard({ posts, role }: any) {
+
 
   return (
     <div>
-      <EditPostS posts={posts} />
-      {/* <SortableList data={posts} isModerator={isModerator} /> */}
+      {posts.map((post: any,i:number) => <Link key={i} href={{
+        pathname: '/moderator/edit',
+        query: { news: post.guid },
+      }} > <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} /></Link>)}
+
     </div>
   )
 }

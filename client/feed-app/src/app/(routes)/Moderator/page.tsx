@@ -3,25 +3,29 @@ import React from 'react'
 import { getServerSession } from "next-auth/next"
 import { autchConfig } from "../../../../config/auth"
 import { userApi } from '@/app/api/userApi'
-interface UserSesion {
-  user: {
-    email: string
-    name: string
-  }
-}
+import { postApi } from '@/app/api/postApi'
+
 async function ModeratoPage() {
-  const session:any = await getServerSession(autchConfig)
+  const session: any = await getServerSession(autchConfig)
+  const moderator: any = await userApi.getUser(session?.user.email)
   
-  const moderator:any = await userApi.getUser(session?.user.email)
-  if(moderator?.data.data.role === "moderator"){
+  const role = moderator?.data.data.role
+  if (role === "moderator") {
+    const posts = await postApi.getAllPosts().then((posts) => {
+      return posts.data.data.sort((a: Post, b: Post) => {
+        const dateA = new Date(a.pubDate).getTime();
+        const dateB = new Date(b.pubDate).getTime();
+        return dateB - dateA;
+      })
+    })
     return (
       <>
-        <ModeratorDashBoard />
+        <ModeratorDashBoard role={role} posts = {posts} />
       </>
     )
 
-  }else
-  return<>Error</>
+  } else
+    return <>Error</>
 
 }
 
