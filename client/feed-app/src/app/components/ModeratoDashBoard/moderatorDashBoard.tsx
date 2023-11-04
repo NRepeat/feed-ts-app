@@ -7,7 +7,7 @@ async function ModeratorDashBoard({ posts, role }: any) {
 
   return (
     <div>
-      {posts.map((post: any,i:number) => <Link key={i} href={{
+      {posts.map((post: any, i: number) => <Link key={i} href={{
         pathname: '/moderator/edit',
         query: { news: post.guid },
       }} > <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} /></Link>)}

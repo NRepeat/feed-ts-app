@@ -23,20 +23,18 @@ export const postApi = {
     }
   },
   getNews: async (newsId: string|null) => {
-    console.log("🚀 ~ file: postApi.ts:26 ~ getNews: ~ newsId:", newsId)
     try {
       const response = await axios.get<PostReq>(`${url}posts/${newsId}`);
 
-      console.log("🚀 ~ file: postApi.ts:30 ~ getNews: ~ response:", response)
       return response;
     } catch (error) {
       console.error("Error:", error);
       throw error;
     }
   },
- update: async ({guid,newTitle}:any): Promise<AxiosResponse<PostReq>>=> {
+ update: async ({news,guid}:any): Promise<AxiosResponse<PostReq>>=> {
   try {
-    const response = await axios.put<PostReq>(`${url}posts/update`, { title: newTitle,guid });
+    const response = await axios.put<PostReq>(`${url}posts/update`, { news,guid });
     return response;
   } catch (error) {
     console.error("Error:", error);

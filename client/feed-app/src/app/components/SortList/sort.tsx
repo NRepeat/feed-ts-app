@@ -4,10 +4,6 @@ import Link from "next/link";
 import NewsCard from "../NewsCard/newsCard";
 import useSortableData from "@/app/hooks/sortHook";
 import useSearch from "@/app/hooks/searchHook";
-import EditPostForm from "../EditPostFormProps/editPostFormProps";
-import { postApi } from "@/app/api/postApi";
-import { userApi } from "@/app/api/userApi";
-import { useSession } from "next-auth/react";
 interface SortableListProps {
   data: Post[];
 }
@@ -15,27 +11,8 @@ interface SortableListProps {
 function SortableList({ data }: SortableListProps) {
   const { data: sortedData, sortData, toggleSortDirection, isAscending, isSortByTitle } = useSortableData(data);
   const { filteredData, searchQuery, handleSearch } = useSearch(sortedData);
-  const [editingPostId, setEditingPostId] = useState<string | null>(null);
-  const { data: user }: any = useSession();
-  const [moderator, setModerator] = useState<any | any>({});
 
-  useEffect(() => {
-    const fetchModerator = async () => {
-      if (user) {
-        try {
 
-          const moderator = await userApi.getUser(user.user.email);
-          setModerator(moderator?.data.data.role);
-        } catch (error) {
-          console.error("Error fetching moderator:", error);
-        }
-      }
-    };
-
-    if (user) {
-      fetchModerator(); 
-    }
-  }, [user]);
 
 
   useEffect(() => {
@@ -87,9 +64,7 @@ function SortableList({ data }: SortableListProps) {
     }
   }, [toggleSortDirection, sortDataByDate, isAscending, sortDataByTitle, isSortByTitle]);
 
-  const handleEditPost = (postId: string) => {
-    setEditingPostId(postId);
-  };
+
 
   return (
     <div>
@@ -106,36 +81,14 @@ function SortableList({ data }: SortableListProps) {
         <option value="date">Сортировать по дате по возрастанию</option>
         <option value="title">Сортировать по заголовку</option>
       </select>
-
       <ul>
         {filteredData.map((post: Post) => (
           <li key={post.guid}>
-            {moderator === "moderator" && editingPostId === post.guid ? (
-              <div>
-                <EditPostForm
-                  initialTitle={post.title}
-                  onSave={(newTitle) => {
-                    const { guid } = post;
-                    const props = {
-                      newTitle,
-                      guid
-                    };
-                    postApi.update(props);
-                    setEditingPostId(null);
-                  }}
-                  onCancel={() => setEditingPostId(null)}
-                />
-              </div>
-            ) : (
-              <div>
-                <Link href={`/feed/${encodeURIComponent(post.guid)}`}>
-                  <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title}  />
-                </Link>
-                {moderator === "moderator" && (
-                  <button onClick={() => handleEditPost(post.guid)}>Редактировать</button>
-                )}
-              </div>
-            )}
+            <div>
+              <Link href={`/feed/${encodeURIComponent(post.guid)}`}>
+                <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
+              </Link>
+            </div>
           </li>
         ))}
       </ul>

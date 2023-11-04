@@ -16,8 +16,9 @@ export default async function RootLayout({
       <body>
         <ProviderSession>
             {children}
+            <Footer/>
         </ProviderSession>
-        <Footer/>
+      
       </body>
     </html>
 
