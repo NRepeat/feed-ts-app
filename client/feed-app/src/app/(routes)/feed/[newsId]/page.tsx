@@ -1,4 +1,4 @@
-
+import './style.css'
 
 import { postApi } from '../../../api/postApi'
 import parse, { DOMNode, Element, HTMLReactParserOptions, domToReact } from 'html-react-parser';
@@ -44,9 +44,14 @@ export default async function News({ params: { newsId } }: Params) {
   };
 
   return (
-    <div>
-      {parse(posts.data.data.title)}
-      {parse(posts.data.data.contentEncoded, options)}
+    <div className='pt-10 min-h-screen flex flex-col justify-center items-center'>
+      <section>  <h1 className='text-xl' >
+        <strong>      {parse(posts.data.data.title)}</strong>
+
+      </h1></section>
+      <article className='text-left flex  flex-col  w-3/6 '> {parse(posts.data.data.contentEncoded, options)}</article>
+
+
 
     </div>
   )

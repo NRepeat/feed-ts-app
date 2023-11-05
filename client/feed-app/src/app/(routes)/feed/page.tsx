@@ -18,7 +18,7 @@ export default async function page() {
 
   return (
     <div className=' overflow-x-hidden'>
-      <Suspense fallback={<p>Loading feed...</p>}><SortableList data={posts} /></Suspense>
+      <Suspense ><SortableList data={posts} /></Suspense>
 
     </div>
   )

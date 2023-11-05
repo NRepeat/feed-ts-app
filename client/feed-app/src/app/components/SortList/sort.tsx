@@ -4,6 +4,8 @@ import Link from "next/link";
 import NewsCard from "../NewsCard/newsCard";
 import useSortableData from "@/app/hooks/sortHook";
 import useSearch from "@/app/hooks/searchHook";
+import Pagination from "../Pagination/pagination";
+import { paginate } from "./paginatiom";
 interface SortableListProps {
   data: Post[];
 }
@@ -16,6 +18,7 @@ function SortableList({ data }: SortableListProps) {
 
 
   useEffect(() => {
+    localStorage.setItem("sortOrder", "descending");
     const savedSortOrder = localStorage.getItem("sortOrder");
     if (savedSortOrder) {
       if (savedSortOrder === "ascending") {
@@ -65,21 +68,32 @@ function SortableList({ data }: SortableListProps) {
   }, [toggleSortDirection, sortDataByDate, isAscending, sortDataByTitle, isSortByTitle]);
 
 
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+ 
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
+  const paginatedPosts = paginate(data, currentPage, pageSize);
+  console.log("🚀 ~ file: sort.tsx:78 ~ SortableList ~  paginatedPosts :",  paginatedPosts )
   return (
     <div className="w-screen flex flex-col justify-center items-center">
-      <div className="flex justify-evenly w-full">
+      <div className="flex justify-between w-full ">
+        <div className="w-fit pt-5  pl-10">
+          <select className=" p-2  rounded-sm text-cyan-800 border-2" onChange={handleSortChange}>
+            <option value="dateReverse">Sort by date descending</option>
+            <option value="date">Sort by date ascending</option>
+            <option value="title">Sort by title</option>
 
-        <select onChange={handleSortChange}>
-          <option value="dateReverse">Сортировать по дате по убыванию</option>
-          <option value="date">Сортировать по дате по возрастанию</option>
-          <option value="title">Сортировать по заголовку</option>
-        </select>
-        <div>
+          </select>
+       
+        </div>
+        
+        <div className="w-96 pt-5  pr-10">
           <input
-          className="h-8"
+            className="p-2 w-full rounded-sm placeholder:text-cyan-800 border-2 "
             type="text"
-            placeholder="Поиск"
+            placeholder="Search"
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
           />
@@ -87,17 +101,25 @@ function SortableList({ data }: SortableListProps) {
       </div>
 
 
-      <ul className="flex min-h-screen w-3/4 gap-6 items-center flex-row flex-wrap">
-        {filteredData.map((post: Post) => (
+      <ul className="flex min-h-screen justify-stretch gap-10 p-10 items-center flex-row  flex-wrap ">
+        {paginatedPosts.map((post: Post) => (
           <li key={post.guid}>
-            <div style={{ height: "220px", width: "200px" }} className="  rounded border-solid border-2 border-cyan-200">
-              <Link href={`/feed/${encodeURIComponent(post.guid)}`}>
+            <Link href={`/feed/${encodeURIComponent(post.guid)}`}>
+              <div style={{ height: "250px", minWidth:"500px" }} className="bg-white flex p-2 w-fit rounded border-solid border-2 border-x-cyan-400">
+
                 <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
-              </Link>
-            </div>
+              </div>
+            </Link>
+
           </li>
         ))}
       </ul>
+      <Pagination
+       items={filteredData.length} // 100
+       currentPage={currentPage} // 1
+       pageSize={pageSize} // 10
+       onPageChange={onPageChange}
+        />
     </div>
   );
 }
