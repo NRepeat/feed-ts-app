@@ -11,7 +11,14 @@ interface SortableListProps {
 }
 
 function SortableList({ data }: SortableListProps) {
-  const { data: sortedData, sortData, toggleSortDirection, isAscending, isSortByTitle } = useSortableData(data);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+ 
+  const onPageChange = (page:number) => {
+    setCurrentPage(page);
+  };
+  const paginatedPosts = paginate(data, currentPage, pageSize);
+  const { data: sortedData, sortData, toggleSortDirection, isAscending, isSortByTitle } = useSortableData(data );
   const { filteredData, searchQuery, handleSearch } = useSearch(sortedData);
 
 
@@ -68,13 +75,7 @@ function SortableList({ data }: SortableListProps) {
   }, [toggleSortDirection, sortDataByDate, isAscending, sortDataByTitle, isSortByTitle]);
 
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 5;
  
-  const onPageChange = (page) => {
-    setCurrentPage(page);
-  };
-  const paginatedPosts = paginate(data, currentPage, pageSize);
   console.log("🚀 ~ file: sort.tsx:78 ~ SortableList ~  paginatedPosts :",  paginatedPosts )
   return (
     <div className="w-screen flex flex-col justify-center items-center">
@@ -101,11 +102,11 @@ function SortableList({ data }: SortableListProps) {
       </div>
 
 
-      <ul className="flex min-h-screen justify-stretch gap-10 p-10 items-center flex-row  flex-wrap ">
-        {paginatedPosts.map((post: Post) => (
-          <li key={post.guid}>
+      <ul className="flex min-h-screen justify-stretch  p-5 items-center flex-row flex-wrap  ">
+        {filteredData.map((post: Post) => (
+          <li  className='w-1/2' key={post.guid}>
             <Link href={`/feed/${encodeURIComponent(post.guid)}`}>
-              <div style={{ height: "250px", minWidth:"500px" }} className="bg-white flex p-2 w-fit rounded border-solid border-2 border-x-cyan-400">
+              <div  className="bg-white w-10/12 flex p-2 mt-5 h-52 rounded border-solid border-2 border-x-cyan-400">
 
                 <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
               </div>
@@ -115,7 +116,7 @@ function SortableList({ data }: SortableListProps) {
         ))}
       </ul>
       <Pagination
-       items={filteredData.length} // 100
+       items={data.length} // 100
        currentPage={currentPage} // 1
        pageSize={pageSize} // 10
        onPageChange={onPageChange}

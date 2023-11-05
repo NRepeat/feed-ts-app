@@ -8,6 +8,7 @@ const feedUrl = process.env.FEED_URL;
 module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
   try {
     const { items } = await parse(feedUrl);
+    console.log("🚀 ~ file: postController.ts:11 ~ module.exports.getAllPosts= ~ items:", items)
     for (const item of items) {
       const post = {
         ...item,
