@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 const { Post } = require('../../models');
 const createHttpError = require('http-errors');
-import {parse} from "../service/parser"
-import 'dotenv/config'
+import { parse } from '../service/parser';
+import 'dotenv/config';
 const feedUrl = process.env.FEED_URL;
 
 module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
@@ -49,18 +49,20 @@ module.exports.getPost = async (req: Request, res: Response, next: any) => {
 };
 module.exports.update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-
     const { news, guid } = req.body;
+    console.log('🚀 ~ file: postController.ts:54 ~ module.exports.update= ~  news:', news);
 
-    const existingPost = await Post.findOne({ where: { guid: guid } });
+    let existingPost = await Post.findOne({ where: { guid: guid } });
 
     if (!existingPost) {
       return res.status(404).json({ error: 'Пост не найден' });
     }
 
-    existingPost.contentEncoded = news
- 
 
+    existingPost.title = news.title;
+    existingPost.categories = [news.categories];
+    existingPost.pubDate = news.pubDate;
+    existingPost.contentEncoded = news.contentEncoded;
     await existingPost.save();
 
     res.json({ message: 'Пост успешно обновлен', data: existingPost });

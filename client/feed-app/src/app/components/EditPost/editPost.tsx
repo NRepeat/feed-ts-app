@@ -9,6 +9,7 @@ export default function EditPostS() {
   const [news, setNews] = useState('')
   const [newNews, setNewNews] = useState('')
   const [newsId, setNewsId] = useState('')
+  const [post, setPost] = useState({})
   const searchParams = useSearchParams()
   const search: any = searchParams.get('news')
 
@@ -20,6 +21,7 @@ export default function EditPostS() {
         const news = await postApi.getNews(encodeURIComponent(search))
         setNews(news.data.data.contentEncoded)
         setNewNews(news.data.data.contentEncoded)
+        setPost(news)
         setNewsId(news.data.data.guid)
 
       } catch (error) {
@@ -58,7 +60,7 @@ export default function EditPostS() {
         }
         } className='fixed bottom-0 w-full h-20 flex justify-center items-center bg-black group'>
 
-        <SaveButton news={{ newNews, newsId }}></SaveButton>
+        <SaveButton news={{ post, newNews, newsId }}></SaveButton>
 
       </div>}
     </div>
