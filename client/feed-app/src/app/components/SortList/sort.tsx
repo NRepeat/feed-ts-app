@@ -15,7 +15,7 @@ function SortableList({ data }) {
 
 
 
-  const pageSize = 6;
+  const pageSize = 8;
   const [sortType, setSortType] = useState("default");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1)
@@ -62,7 +62,7 @@ function SortableList({ data }) {
   }, [data, sortType, searchTerm, pageSize, currentPage]);
 
   return (
-    <div className="w-screen flex flex-col justify-center items-center">
+    <div className=" flex flex-col justify-center items-center ">
       <div className="flex justify-between w-full ">
         <div className="w-fit pt-5  pl-10">
           <select className="p-2 rounded-sm text-cyan-800 border-2" onChange={(e) => setSortType(e.target.value)}>
@@ -83,28 +83,32 @@ function SortableList({ data }) {
         </div>
       </div>
       <h1 className="mr-12 text-3xl ">
-        <strong >      Technology Blog</strong>
+        <strong >Technology Blog</strong>
 
 
       </h1>
-      <ul className="flex min-h-screen w-full justify-stretch p-5 items-center flex-row flex-wrap">
+      <ul className="flex min-h-screen w-full justify-center p-5 items-center flex-row flex-wrap">
 
         {sortedAndFilteredPosts.map((post) => (
-          <li className="w-1/2 p-2" key={post.guid}>
-            <Link href={`/feed/${encodeURIComponent(post.guid)}`}>
-              <div className="bg-white min-w-max h-52 flex p-2 mt-5 rounded border-solid border-2 border-y-slate-400 border-x-cyan-400">
+          <li className="w-2/5 pl-2 pr-10 " key={post.guid}>
+            <Link href={`/newsfeed/${encodeURIComponent(post.guid)}`}>
+              <div style={{minHeight:'250px'}} className="bg-white  flex p-2 mt-5 rounded border-solid border-2 border-y-slate-400 border-x-cyan-400">
                 <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
               </div>
             </Link>
           </li>
         ))}
       </ul>
-      <Pagination
-        items={data.length}
-        currentPage={currentPage}
-        pageSize={pageSize}
-        onPageChange={onPageChange}
-      />
+      <div className="pr-7">
+        <Pagination
+          items={data.length}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+        />
+
+      </div>
+
     </div>
   );
 }

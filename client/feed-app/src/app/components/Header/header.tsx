@@ -28,27 +28,26 @@ function Header() {
 
     fetchUserRole();
   }, [session?.user?.email]);
-  if (role === "moderator" && search) {
-    return (
-
-      <><div className='w-full bg-cyan-900'>Header</div></>
-    );
-  }
+ 
   return <><div className=' text-cyan-50 w-full h-14 flex items-center justify-between bg-cyan-900 p-3'>
-    <Link href={'/'}><strong > Feed core</strong></Link>
-    <Link href={'/feed'}> <div>   <button>News</button></div></Link>
+    <Link href={'/'}><strong > NEWS CORE</strong></Link>
+    <Link href={'/newsfeed'}> <div>   <button>News</button></div></Link>
     <div>
       {session ? (
         <div className="flex space-x-4">
-          {role === "moderator" && search ? <Link href={'/moderator'}>Moderator Dashboard</Link> : <button className="">Profile</button>}
-
+          {role == "moderator" &&  <Link href={'/moderator'}>Moderator Dashboard</Link> }
+          <button className="">Profile</button>
           <button onClick={() => signOut()}>Sign out</button>
         </div>
       ) : (
-        <Link href={'/signin'}>
+        <div className='flex gap-3'>
+          <Link href={'/signin'}>
             <button className="">Sign In</button>
-        </Link>
-    
+          </Link>
+          <Link href={'/registration'}>
+            <button className="">Sign up</button>
+          </Link></div>
+
       )}
     </div>
   </div></>

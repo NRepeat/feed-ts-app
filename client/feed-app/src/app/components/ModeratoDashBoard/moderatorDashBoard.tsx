@@ -10,8 +10,9 @@ import { postApi } from '@/app/api/postApi';
 function ModeratorDashboard({ posts, role }: any) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [editedPost, setEditedPost] = useState({});
-const [poostData,setPostData] = useState(posts)
-
+  const [poostData, setPostData] = useState(posts)
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 4;
   const openModal = (index) => {
     setEditedPost({ ...poostData[index] });
     setModalIsOpen(true);
@@ -28,7 +29,7 @@ const [poostData,setPostData] = useState(posts)
   const saveChanges = async () => {
     await postApi.update(editedPost.guid, editedPost);
     setModalIsOpen(false);
-    
+
     const updatedPosts = posts.map((post) => {
       if (post.guid === editedPost.guid) {
         return editedPost;
@@ -36,11 +37,10 @@ const [poostData,setPostData] = useState(posts)
         return post;
       }
     });
-  
+
     setPostData(updatedPosts);
   };
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6;
+
 
   const saveCurrentPage = (page: number) => {
     localStorage.setItem('currentPage', page.toString());
@@ -48,24 +48,29 @@ const [poostData,setPostData] = useState(posts)
 
   const loadCurrentPage = () => {
     const savedPage = localStorage.getItem('currentPage');
+
     return savedPage ? parseInt(savedPage, 10) : 1;
   };
 
   useEffect(() => {
     const initialPage = loadCurrentPage();
     setCurrentPage(initialPage);
-    setPostData( paginate(poostData, currentPage, pageSize))
+    setPostData(paginate(posts, currentPage, pageSize))
 
   }, []);
 
+  useEffect(() => {
+    setPostData(paginate(posts, currentPage, pageSize))
+  }, [currentPage]);
   const onPageChange = (page: number) => {
     setCurrentPage(page);
     saveCurrentPage(page);
   };
-const  handleDelete = async (pageId: string)=>{
-await postApi.delete(pageId)
-
-}
+  const handleDelete = async (pageId: string) => {
+    await postApi.delete(pageId)
+    alert('deleted')
+    window.location.reload();
+  }
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -90,7 +95,7 @@ await postApi.delete(pageId)
             <button onClick={() => openModal(i)} className='w-1/2 p-3 border-2 hover:text-white hover:bg-cyan-800 hover:border-black border-cyan-800'>
               <strong className='text-3xl'>Edit card</strong>
             </button>
-            <button onClick={()=>handleDelete(post.guid)} className='w-1/2 border-2 p-3 hover:text-white hover:bg-cyan-800 hover:border-black border-cyan-800'>
+            <button onClick={() => handleDelete(post.guid)} className='w-1/2 border-2 p-3 hover:text-white hover:bg-cyan-800 hover:border-black border-cyan-800'>
               <strong className='text-3xl'>Delete card</strong>
             </button>
           </div>

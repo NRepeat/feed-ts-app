@@ -1,10 +1,11 @@
 'use client'
-
+import "./style.css"
 import React, { FormEventHandler, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { userApi } from '@/app/api/userApi';
+import Link from "next/link";
 
 interface MyFormValues {
   name: string;
@@ -42,7 +43,7 @@ function RegistrationForm() {
           redirect: false,
         });
         if (res && !res.error) {
-          router.push('/feed');
+          router.push('/newsfeed');
         } else {
           console.log(res);
         }
@@ -55,57 +56,95 @@ function RegistrationForm() {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={(values, actions) => {
-        handleSubmitForm(values);
-      }}
-    >
-      <Form>
-        <label htmlFor="name">Full name</label>
-        <Field
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Name"
-          required
-        />
+    <div className='flex  w-full min-h-screen justify-center items-center'>
 
-        <label htmlFor="email">Email</label>
-        <Field
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Email"
-          required
-        />
+      <Formik
 
-        <label htmlFor="password">Password</label>
-        <Field
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Password"
-          required
-        />
-        <label htmlFor="checkbox">If you have moderator code</label>
-        <input
-          type="checkbox"
-          checked={togle}
-          onChange={handleToggle}
-          id="checkbox"
-        />
-        {togle && <div><label htmlFor="moderatorCode">Moderator Code</label>
-          <Field
-            type="text"
-            id="moderatorCode"
-            name="moderatorCode"
-            placeholder="Moderator Code"
-          /></div>}
+        initialValues={initialValues}
+        onSubmit={(values, actions) => {
+          handleSubmitForm(values);
+        }}
+      >
+        <Form className='w-full justify-center flex '>
 
-        <button type="submit">Submit</button>
-      </Form>
-    </Formik>
+          <div className=' border-2 w-2/6 rounded-md shadow-2xl text-center p-5 ' >
+            <div className="mb-10">
+              <strong className=" text-4xl ">Sign up</strong>
+            </div>
+
+
+            <section className='flex items-center justify-between  flex-col gap-5'>
+              <section className='flex  text-left w-1/2 flex-col'>
+              <label htmlFor="name">Full name</label>
+                <Field
+
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Name"
+                  required
+                />
+              </section>
+
+
+
+              <section className='flex  text-left w-1/2 flex-col'>
+              <label htmlFor="email">Email</label>
+                <Field
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                />
+              </section>
+
+
+              <section className='flex text-left w-1/2 flex-col'>
+              <label htmlFor="password">Password</label>
+                <Field
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                /></section>
+
+              <section className='pl-3 flex w-1/2 flex-row'>
+
+                <input
+                  type="checkbox"
+                  checked={togle}
+                  onChange={handleToggle}
+                  id="checkbox"
+                />
+                <label htmlFor="checkbox">If you have moderator code</label>
+              </section>
+              {togle && <div className='flex w-1/2 flex-col'>
+                <Field
+                  type="text"
+                  id="moderatorCode"
+                  name="moderatorCode"
+                  placeholder="Moderator Code"
+                /></div>}
+              <div className="flex  justify-evenly  w-full">  <Link className="backButton transition-all" href={"/signin"}>  
+              <button className="flex justify-center items-center w-full h-full "> <strong> Back to sign in</strong>  </button></Link>
+                <button className="submitButton" type="submit"> <strong>Register</strong> </button></div>
+
+            </section>
+
+
+
+          </div>
+
+
+
+
+        </Form>
+      </Formik>
+
+    </div>
+
   );
 }
 

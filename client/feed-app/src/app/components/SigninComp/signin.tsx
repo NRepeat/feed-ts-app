@@ -7,9 +7,7 @@ export default async function SigninComp() {
   return (
     <>
       <SignForm />
-      <GoogleButton />
-
-      <Link href={'/registration'}>or Registration</Link>
+ 
 
     </>
   )

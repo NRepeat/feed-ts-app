@@ -1,0 +1,38 @@
+/* Стиль для всей формы */
+.FormikForm {
+  margin: 0 auto;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.FormikForm label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+.FormikForm input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid rgba(141, 200, 200, 0.69);
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.FormikForm button {
+  background-color: #007BFF;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.FormikForm button:hover {
+  background-color: #0056b3;
+}

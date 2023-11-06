@@ -19,9 +19,9 @@ async function ModeratoPage() {
       })
     })
     return (
-      <>
+      <div className='min-h-screen'>
         <ModeratorDashBoard role={role} posts={posts} />
-      </>
+      </div>
     )
 
   } else

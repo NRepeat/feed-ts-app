@@ -3,7 +3,7 @@ import React from 'react'
 
 function Registration() {
   return (
-    <div>Registration  <RegistrationForm /></div>
+    <div className='min-h-screen '> <RegistrationForm /></div>
   )
 }
 

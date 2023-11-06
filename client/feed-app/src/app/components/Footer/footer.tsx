@@ -10,7 +10,6 @@ function Footer() {
   const [role, setRole] = useState("customer");
   const { data: session } = useSession();
   const searchParams = useSearchParams();
-  const search = searchParams.get('news');
 
   useEffect(() => {
     async function fetchUserRole() {
@@ -44,12 +43,6 @@ function Footer() {
     </div>
   );
 
-  // if (role === "moderator" && search) {
-  //   return (
-
-
-  //   );
-  // }
 
   return contactInfo;
 }
