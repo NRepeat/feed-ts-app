@@ -22,6 +22,7 @@ interface Params {
 export default async function News({ params: { newsId } }: Params) {
 
   const posts = await postApi.getNews(newsId);
+  console.log("🚀 ~ file: page.tsx:25 ~ News ~ posts:", posts)
   const options: HTMLReactParserOptions = {
     replace(domNode) {
       if (domNode instanceof Element && domNode.name === "pre") {

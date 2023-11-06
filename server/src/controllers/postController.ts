@@ -5,7 +5,7 @@ import { parse } from '../service/parser';
 import 'dotenv/config';
 const feedUrl = process.env.FEED_URL;
 
-module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
+module.exports.getAllParsedPosts = async (req: Request, res: Response, next: any) => {
   try {
     const { items } = await parse(feedUrl);
     for (const item of items) {
@@ -14,7 +14,6 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
         contentEncoded: item['content:encoded'],
         contentEncodedSnippet: item['content:encodedSnippet'],
       };
-
       try {
         const existingPost = await Post.findOne({ where: { guid: post.guid } });
 
@@ -25,12 +24,13 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
         console.error(`Ошибка при вставке/обновлении записи: ${error.message}`);
       }
     }
-    try {
-      const posts = await Post.findAll();
-      res.send({ data: posts });
-    } catch (error) {
-      console.error(`Ошибка получении постов: ${error.message}`);
-    }
+  } catch (error) {}
+};
+
+module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
+  try {
+    const posts = await Post.findAll();
+    res.send({ data: posts });
   } catch (error) {
     next(error);
   }
@@ -50,14 +50,12 @@ module.exports.getPost = async (req: Request, res: Response, next: any) => {
 module.exports.update = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { news, guid } = req.body;
-    console.log('🚀 ~ file: postController.ts:54 ~ module.exports.update= ~  news:', news);
 
     let existingPost = await Post.findOne({ where: { guid: guid } });
 
     if (!existingPost) {
       return res.status(404).json({ error: 'Пост не найден' });
     }
-
 
     existingPost.title = news.title;
     existingPost.categories = [news.categories];
@@ -68,6 +66,18 @@ module.exports.update = async (req: Request, res: Response, next: NextFunction) 
     res.json({ message: 'Пост успешно обновлен', data: existingPost });
   } catch (error) {
     console.error(`Ошибка при обновлении поста: ${error.message}`);
+    next(error);
+  }
+};
+module.exports.delete = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log('🚀 ~ file: postController.ts:76 ~ module.exports.delete ~ req.body:', req);
+    const { guid } = req.query;
+    console.log('🚀 ~ file: postController.ts:76 ~ module.exports.delete ~ newsId :', guid);
+
+    const resDb = await Post.destroy({ where: { guid: guid } });
+    res.send({ data: resDb });
+  } catch (error) {
     next(error);
   }
 };

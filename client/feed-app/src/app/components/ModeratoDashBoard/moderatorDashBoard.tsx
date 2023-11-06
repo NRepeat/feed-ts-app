@@ -62,7 +62,10 @@ const [poostData,setPostData] = useState(posts)
     setCurrentPage(page);
     saveCurrentPage(page);
   };
+const  handleDelete = async (pageId: string)=>{
+await postApi.delete(pageId)
 
+}
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -83,11 +86,11 @@ const [poostData,setPostData] = useState(posts)
               <NewsCard categories={post.categories} pubDate={post.pubDate} title={post.title} />
             </div>
           </Link>
-          <div className='flex pl-2 flex-row w-full gap-2' key={i + 1}>
+          <div className='flex pl-2 mt-2 mb-2 flex-row w-full gap-2' key={i + 1}>
             <button onClick={() => openModal(i)} className='w-1/2 p-3 border-2 hover:text-white hover:bg-cyan-800 hover:border-black border-cyan-800'>
               <strong className='text-3xl'>Edit card</strong>
             </button>
-            <button className='w-1/2 border-2 p-3 hover:text-white hover:bg-cyan-800 hover:border-black border-cyan-800'>
+            <button onClick={()=>handleDelete(post.guid)} className='w-1/2 border-2 p-3 hover:text-white hover:bg-cyan-800 hover:border-black border-cyan-800'>
               <strong className='text-3xl'>Delete card</strong>
             </button>
           </div>

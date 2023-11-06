@@ -4,6 +4,7 @@ const app = express();
 const cors = require('cors');
 const router = require('./router/rootRouter');
 const errorMiddleware = require('./middlewares/error-middleware');
+
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());

@@ -45,4 +45,16 @@ export const postApi = {
       throw error;
     }
   },
+  delete: async (guid: string): Promise<AxiosResponse<PostReq>> => {
+    console.log("🚀 ~ file: postApi.ts:49 ~ delete: ~ guid:", guid);
+    try {
+      const res = await axios.delete(`${url}posts/delete`, {
+       params: { guid }, 
+      });
+      return res;
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
+  },
 };
