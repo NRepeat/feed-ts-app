@@ -110,7 +110,7 @@ function RegistrationForm() {
                   required
                 /></section>
 
-              <section className='pl-3 flex w-1/2 flex-row'>
+              <section className='pl-3 flex w-1/2 flex-row '>
 
                 <input
                   type="checkbox"
@@ -118,7 +118,7 @@ function RegistrationForm() {
                   onChange={handleToggle}
                   id="checkbox"
                 />
-                <label htmlFor="checkbox">If you have moderator code</label>
+                <label className="pt-1" htmlFor="checkbox">If you have moderator code</label>
               </section>
               {togle && <div className='flex w-1/2 flex-col'>
                 <Field

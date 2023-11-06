@@ -36,7 +36,7 @@ function Header() {
       {session ? (
         <div className="flex space-x-4">
           {role == "moderator" &&  <Link href={'/moderator'}>Moderator Dashboard</Link> }
-          <button className="">Profile</button>
+         <Link href={'/profile'}>Profile</Link>
           <button onClick={() => signOut()}>Sign out</button>
         </div>
       ) : (

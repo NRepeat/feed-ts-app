@@ -13,7 +13,7 @@ export const UserService = {
       throw ApiError.BadRequest(`User with this email:${email} exist `);
     }
 
-    moderatorCode ? (role = process.env.MODERATOR_ROLE) : (role = process.env.CUSTOMER_ROLE);
+    moderatorCode === process.env.MODERATOR_CODE  ? (role = process.env.MODERATOR_ROLE) : (role = process.env.CUSTOMER_ROLE);
     const hashPassword = await bcrypt.hash(passwrod, 3);
     const newUser = await User.create({ email, password: hashPassword, displayName, role });
     const { email: userEmail, id, displayName: displayUserName, role: userRole } = newUser;
@@ -53,9 +53,5 @@ export const UserService = {
     const user = await User.findOne({ where: { email: email } });
     return user;
   },
-  // logout: async (refreshToken) => {
-  //   const token = await TokenService.removeToken(refreshToken);
-  //   return token;
-  // },
 
 };

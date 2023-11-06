@@ -29,13 +29,3 @@ module.exports.getUser = async (req: Request, res: Response, next: any) => {
     next(error);
   }
 };
-// module.exports.logout = async (req: Request, res: Response, next: any) => {
-//   try {
-//     const { refreshToken } = req.cookies;
-//     const token = await UserService.logout(refreshToken);
-//     res.clearCookie('refreshToken');
-//     res.send({ data: token });
-//   } catch (e) {
-//     next(e);
-//   }
-// };

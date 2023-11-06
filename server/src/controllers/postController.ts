@@ -56,7 +56,6 @@ module.exports.update = async (req: Request, res: Response, next: NextFunction) 
     if (!existingPost) {
       return res.status(404).json({ error: 'Пост не найден' });
     }
-
     existingPost.title = news.title;
     existingPost.categories = [news.categories];
     existingPost.pubDate = news.pubDate;
@@ -71,9 +70,7 @@ module.exports.update = async (req: Request, res: Response, next: NextFunction) 
 };
 module.exports.delete = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('🚀 ~ file: postController.ts:76 ~ module.exports.delete ~ req.body:', req);
     const { guid } = req.query;
-    console.log('🚀 ~ file: postController.ts:76 ~ module.exports.delete ~ newsId :', guid);
 
     const resDb = await Post.destroy({ where: { guid: guid } });
     res.send({ data: resDb });

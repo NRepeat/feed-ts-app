@@ -6,7 +6,7 @@ const router = require('./router/rootRouter');
 const errorMiddleware = require('./middlewares/error-middleware');
 
 app.use(express.json());
-app.use(cors());
+app.use(cors("*"));
 app.use(cookieParser());
 app.use(express.static('public')); 
 app.use(router);

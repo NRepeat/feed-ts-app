@@ -8,7 +8,7 @@ function GoogleButton() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || '/'
   return (
-   <button className='googleButton' onClick={()=>(signIn("google",{callbackUrl}))}>Sign in with Google</button>
+   <button className='googleButton   ' onClick={()=>(signIn("google",{callbackUrl}))}>Sign in with Google</button>
   )
 }
 

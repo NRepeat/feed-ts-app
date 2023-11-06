@@ -17,10 +17,10 @@ export default async function Home() {
           <strong>Join us on this journey of discovery and stay ahead with NEWS CORE!</strong>
         </p>
         <div className="flex gap-40 pt-20 w-full justify-center">
-          <Link href="/newsfeed" className="bg-gray-100 w-3/12 rounded-md p-3 flex justify-center items-center">
+          <Link href="/newsfeed" className="bg-gray-100 w-3/12 hover:bg-cyan-50 rounded-md p-3 flex justify-center items-center">
             Browse news
           </Link>
-          {!session && <Link href={'/signin'} className="signButton w-3/12 p-3 rounded-md"> Sign in</Link>}
+          {!session && <Link href={'/signin'} className="signButton w-3/12 p-3 hover:bg-cyan-500 rounded-md"> Sign in</Link>}
         </div>
       </div>
     </div>

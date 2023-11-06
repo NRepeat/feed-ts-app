@@ -1,6 +1,11 @@
+.googleButton {
+  background: rgb(4, 5, 164);
+  background: linear-gradient(90deg, rgba(4, 5, 164, 1) 0%, rgba(2, 99, 52, 1) 34%, rgba(217, 226, 15, 1) 69%, rgba(255, 0, 0, 1) 100%);
+  transition: all 5.3s;
+}
 
+.googleButton:hover {
+  background: rgb(4, 5, 164);
+  background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(217, 226, 15, 1) 34%, rgba(2, 99, 52, 1) 69%, rgba(4, 5, 164, 1) 100%);
 
-.googleButton{
-  background: rgb(4,5,164);
-  background: linear-gradient(90deg, rgba(4,5,164,1) 0%, rgba(2,99,52,1) 34%, rgba(217,226,15,1) 69%, rgba(255,0,0,1) 100%);
 }

@@ -68,7 +68,6 @@ function ModeratorDashboard({ posts, role }: any) {
   };
   const handleDelete = async (pageId: string) => {
     await postApi.delete(pageId)
-    alert('deleted')
     window.location.reload();
   }
   const style = {
