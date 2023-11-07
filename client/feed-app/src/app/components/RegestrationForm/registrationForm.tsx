@@ -2,10 +2,11 @@
 import "./style.css"
 import React, { FormEventHandler, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { userApi } from '@/app/api/userApi';
 import Link from "next/link";
+import { Modal, Box } from "@mui/material";
 
 interface MyFormValues {
   name: string;
@@ -16,6 +17,9 @@ interface MyFormValues {
 
 function RegistrationForm() {
   const [togle, setTogle] = useState(false);
+  const [userError, setUserError] = useState(false)
+  const [user, setUser] = useState<any>({})
+  const session = useSession()
   const initialValues: MyFormValues = {
     name: '',
     email: '',
@@ -34,19 +38,29 @@ function RegistrationForm() {
         values.email,
         values.password,
         values.name,
-        values.moderatorCode
+        values.moderatorCode,
       );
       if (dbUser) {
+        setUser(dbUser.data.data)
+
         const res = await signIn('credentials', {
-          email: values.email,
+          email: dbUser.data.data.user.userEmail,
           password: values.password,
           redirect: false,
         });
+
         if (res && !res.error) {
+         
+          const status = session.status === "authenticated" ? true : false
           router.push('/newsfeed');
+          await userApi.setStatus(status, dbUser.data.data.user.id, session.data?.expires)
+
+
         } else {
           console.log(res);
         }
+      } else {
+        setUserError(true)
       }
 
 
@@ -54,7 +68,17 @@ function RegistrationForm() {
       console.error(error);
     }
   };
-
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
   return (
     <div className='flex  w-full min-h-screen justify-center items-center'>
 
@@ -75,7 +99,7 @@ function RegistrationForm() {
 
             <section className='flex items-center justify-between  flex-col gap-5'>
               <section className='flex  text-left w-1/2 flex-col'>
-              <label htmlFor="name">Full name</label>
+                <label htmlFor="name">Full name</label>
                 <Field
 
                   type="text"
@@ -89,7 +113,7 @@ function RegistrationForm() {
 
 
               <section className='flex  text-left w-1/2 flex-col'>
-              <label htmlFor="email">Email</label>
+                <label htmlFor="email">Email</label>
                 <Field
                   type="email"
                   id="email"
@@ -101,7 +125,7 @@ function RegistrationForm() {
 
 
               <section className='flex text-left w-1/2 flex-col'>
-              <label htmlFor="password">Password</label>
+                <label htmlFor="password">Password</label>
                 <Field
                   type="password"
                   id="password"
@@ -127,8 +151,8 @@ function RegistrationForm() {
                   name="moderatorCode"
                   placeholder="Moderator Code"
                 /></div>}
-              <div className="flex  justify-evenly  w-full">  <Link className="backButton transition-all" href={"/signin"}>  
-              <button className="flex justify-center items-center w-full h-full "> <strong> Back to sign in</strong>  </button></Link>
+              <div className="flex  justify-evenly  w-full">  <Link className="backButton transition-all" href={"/signin"}>
+                <button className="flex justify-center items-center w-full h-full "> <strong> Back to sign in</strong>  </button></Link>
                 <button className="submitButton" type="submit"> <strong>Register</strong> </button></div>
 
             </section>
@@ -142,7 +166,16 @@ function RegistrationForm() {
 
         </Form>
       </Formik>
-
+      <Modal
+        open={userError}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: "50%" }}>
+          <button className='border-2 p-2 hover:bg-black hover:text-white' onClick={() => setUserError(false)}>Close Modal</button>
+          <p>User with this email {user.email} exist</p>
+        </Box>
+      </Modal>
     </div>
 
   );

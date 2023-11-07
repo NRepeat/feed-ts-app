@@ -16,5 +16,7 @@ interface Post {
 }
 interface IUser {
   email: string;
-  name: string;
+  displayName: string;
+  role: string;
+  id:number
 }

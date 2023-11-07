@@ -3,7 +3,7 @@ const SERVER_URL = "http://localhost:5001";
 export const userApi = {
   login: async (
     email: string,
-    password: string
+    password: string,
   ): Promise<AxiosResponse<AxiosResponse> | undefined> => {
     try {
       const res = await axios.post(`${SERVER_URL}/user/login`, {
@@ -19,7 +19,7 @@ export const userApi = {
     email: string,
     password: string,
     name: string,
-    moderatorCode: string
+    moderatorCode: string,
   ): Promise<AxiosResponse<AuthenticatorResponse> | undefined> => {
     try {
       const req = await axios.post<AuthenticatorResponse>(
@@ -31,9 +31,9 @@ export const userApi = {
       console.error("Ошибка:", error);
     }
   },
-  logout: async (email: string, password: string): Promise<void> => {
+  logout: async (userId:number): Promise<void> => {
     try {
-      return axios.post("/logout");
+      return axios.put(`${SERVER_URL}/user/logout/${userId}`);
     } catch (error) {
       console.error("Ошибка:", error);
     }
@@ -48,4 +48,13 @@ export const userApi = {
       console.error("Ошибка:", error);
     }
   },
+  setStatus:async (status:boolean,userId:number,expire:any) => {
+    try {
+      const req = await axios.post(
+        `${SERVER_URL}/user/status/${userId}/${status}/${expire}`
+      );
+    } catch (error) {
+      console.error("Ошибка:", error);
+    }
+  }
 };

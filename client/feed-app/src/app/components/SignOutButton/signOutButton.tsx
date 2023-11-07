@@ -1,21 +1,38 @@
 "use client"
 
-import { signOut } from 'next-auth/react'
+import { userApi } from '@/app/api/userApi'
+import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 function SignOutButton() {
-  const route = useRouter()
+  const [user, setUser] = useState<any>({});
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  const handleLogout = async () => {
-  // Дождитесь завершения выхода
-    route.push("/signin");
-    await signOut(); // Затем перейдите на новую страницу
+  useEffect(() => {
+    if (session?.user?.email) {
+      userApi.getUser(session.user.email)
+        .then((response) => {
+          setUser(response?.data.data);
+        })
+        .catch((error) => {
+          console.error('Error fetching user data:', error);
+        });
+    }
+  }, [session]);
+
+  const handleSignout = async () => {
+    if (user.user?.id) {
+      await userApi.logout(user.user.id);
+    }
+    await signOut();
+    router.push('/'); 
   }
-  return (
-    <button onClick={() => handleLogout()}>Sign out</button>
 
-  )
+  return (
+    <button className='w-full bg-cyan-950 text-white h-full rounded-md' onClick={handleSignout}>Sign out</button>
+  );
 }
 
-export default SignOutButton
+export default SignOutButton;
