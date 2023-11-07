@@ -7,6 +7,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import GoogleButton from "../GoogleButton/googleButton";
 import Link from "next/link";
 import { userApi } from "@/app/api/userApi";
+import { useAppDispatch, useAppSelector } from "@/app/hooks/reduxHooks";
+import { userSelector } from "@/app/selector/selector";
+import { getUser } from "@/app/redux/slices/userSlice";
 
 interface MyFormValues {
   email: string;
@@ -18,6 +21,9 @@ function SignForm() {
   const router = useRouter();
   const session = useSession()
   const param = useSearchParams()
+  const { user } = useAppSelector(userSelector)
+  console.log("🚀 ~ file: signForm.tsx:25 ~ SignForm ~ user:", user)
+  const dispatch = useAppDispatch()
   const callback = param.get("callbackUrl")
   const handleSubmitForm = async (values: any, event: any) => {
     const res = await signIn('credentials', {
@@ -26,11 +32,10 @@ function SignForm() {
       redirect: false
     });
     if (res && !res.error) {
-
-      const dbUser: any = await userApi.getUser(values.email)
+      await dispatch(getUser({ email: values.email }));
       const status = true
       router.push('/newsfeed');
-      await userApi.setStatus(status, dbUser.data.data.user.id, session.data?.expires)
+      await userApi.setStatus(status, user.id, session.data?.expires)
     } else
       console.log(res)
   };

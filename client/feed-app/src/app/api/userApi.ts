@@ -39,6 +39,7 @@ export const userApi = {
     }
   },
   getUser: async (email: any) => {
+    console.log("🚀 ~ file: userApi.ts:42 ~ getUser: ~ email:", email)
     try {
       const req = await axios.get(
         `${SERVER_URL}/user/getUser/${email}`

@@ -7,6 +7,10 @@ import { useRouter } from 'next/navigation';
 import { userApi } from '@/app/api/userApi';
 import Link from "next/link";
 import { Modal, Box } from "@mui/material";
+import { getUser } from "@/app/redux/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks/reduxHooks";
+import { userSelector } from "@/app/selector/selector";
+
 
 interface MyFormValues {
   name: string;
@@ -18,7 +22,9 @@ interface MyFormValues {
 function RegistrationForm() {
   const [togle, setTogle] = useState(false);
   const [userError, setUserError] = useState(false)
-  const [user, setUser] = useState<any>({})
+  const { user } = useAppSelector(userSelector)
+  const router = useRouter();
+  const dispatch = useAppDispatch()
   const session = useSession()
   const initialValues: MyFormValues = {
     name: '',
@@ -26,7 +32,6 @@ function RegistrationForm() {
     password: '',
     moderatorCode: '',
   };
-  const router = useRouter();
 
   const handleToggle = () => {
     setTogle(!togle);
@@ -41,8 +46,7 @@ function RegistrationForm() {
         values.moderatorCode,
       );
       if (dbUser) {
-        setUser(dbUser.data.data)
-
+        await dispatch(getUser({ email: dbUser.data.data.user.userEmail }));
         const res = await signIn('credentials', {
           email: dbUser.data.data.user.userEmail,
           password: values.password,
@@ -50,7 +54,7 @@ function RegistrationForm() {
         });
 
         if (res && !res.error) {
-         
+
           const status = session.status === "authenticated" ? true : false
           router.push('/newsfeed');
           await userApi.setStatus(status, dbUser.data.data.user.id, session.data?.expires)

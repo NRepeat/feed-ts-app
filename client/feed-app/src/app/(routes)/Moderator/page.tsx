@@ -6,10 +6,12 @@ import { userApi } from '@/app/api/userApi'
 import { postApi } from '@/app/api/postApi'
 
 async function ModeratoPage() {
+
   const session: any = await getServerSession(autchConfig)
   const moderator: any = await userApi.getUser(session?.user.email)
+  console.log("🚀 ~ file: page.tsx:13 ~ ModeratoPage ~ moderator:", moderator.data)
   let role = ""
-  moderator?.data.data.role ? role = moderator?.data.data.role : role = "customer"
+  moderator?.data.data.user.role ? role = moderator?.data.data.user.role : role = "customer"
   if (role === "moderator") {
     const posts = await postApi.getAllPosts().then((posts) => {
       return posts.data.data.sort((a: Post, b: Post) => {

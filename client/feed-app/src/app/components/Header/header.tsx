@@ -1,22 +1,22 @@
 'use client'
 
 import { userApi } from '@/app/api/userApi';
+import { useAppDispatch, useAppSelector } from '@/app/hooks/reduxHooks';
+import { getUser } from '@/app/redux/slices/userSlice';
+import { userSelector } from '@/app/selector/selector';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 function Header() {
-  const [user, setUser] = useState<any>({});
   const { data: session } = useSession();
-
+  const { user } = useAppSelector(userSelector)
+  const dispatch = useAppDispatch()
   useEffect(() => {
     async function fetchUserRole() {
       if (session?.user?.email) {
         try {
-          const user = await userApi.getUser(session.user.email);
-          if (user?.data) {
-            setUser(user.data.data);
-          }
+          await dispatch(getUser({ email: session.user.email }));
         } catch (error) {
           console.error("Error fetching user role:", error);
         }
@@ -25,9 +25,12 @@ function Header() {
 
     fetchUserRole();
   }, [session?.user?.email]);
-  const handleSignout = async (userID: number) => {
+  const handleSignout = async () => {
 
-    await userApi.logout(userID)
+    if (!user?.id) {
+      signOut()
+    }
+    await userApi.logout(user?.id)
     signOut()
 
 
@@ -38,10 +41,10 @@ function Header() {
     <div>
       {session ? (
         <div className="flex space-x-4">
-          {user.role === "moderator" && <Link href={'/moderator'}>Moderator Dashboard</Link>}
+          {user?.role === "moderator" ? <Link href={'/moderator'}>Moderator Dashboard</Link> : <></>}
           <Link href={'/profile'}>Profile</Link>
-       
-          <button onClick={() => handleSignout( user.user.id)}>Sign out</button>
+
+          <button onClick={() => handleSignout()}>Sign out</button>
         </div>
       ) : (
         <div className='flex gap-3'>

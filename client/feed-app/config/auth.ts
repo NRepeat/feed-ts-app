@@ -1,8 +1,6 @@
-import { AuthOptions, RequestInternal, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { userApi } from "@/app/api/userApi";
-
 export const autchConfig: any = {
   providers: [
     GoogleProvider({
@@ -18,7 +16,7 @@ export const autchConfig: any = {
 
       async authorize(credentials: any | undefined) {
         if (credentials !== undefined) {
-          const credentialsEmail = credentials.email;
+          const credentialsEmail: string = credentials.email;
           const password = credentials.password;
           const user: any = await userApi.login(credentialsEmail, password);
           const {

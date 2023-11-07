@@ -7,26 +7,8 @@ import React, { useEffect, useState } from 'react'
 
 
 function Footer() {
-  const [role, setRole] = useState("customer");
-  const { data: session } = useSession();
-  const searchParams = useSearchParams();
 
-  useEffect(() => {
-    async function fetchUserRole() {
-      if (session?.user?.email) {
-        try {
-          const moderator = await userApi.getUser(session.user.email);
-          if (moderator?.data.data.role) {
-            setRole(moderator.data.data.role);
-          }
-        } catch (error) {
-          console.error("Error fetching user role:", error);
-        }
-      }
-    }
 
-    fetchUserRole();
-  }, [session?.user?.email]);
 
   const contactInfo = (
     <div className='bg-black text-cyan-50 flex justify-between p-3'>

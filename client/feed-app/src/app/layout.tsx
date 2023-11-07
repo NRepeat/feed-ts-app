@@ -1,10 +1,9 @@
 
-import { Provider } from 'react-redux'
 import Header from './components/Header/header'
 import './globals.css'
 import { ProviderSession } from './provider/provider'
 import Footer from "@/app/components/Footer/footer"
-import store from "./redux/store";
+import ReduxProvider from './provider/reduxProvider'
 
 
 export default async function RootLayout({
@@ -15,20 +14,15 @@ export default async function RootLayout({
 
 
   return (
-
-
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <ProviderSession>
-          <Provider store={store}>
+          <ReduxProvider>
             < Header />
-
             {children}
             <Footer />
-          </Provider>
-
+          </ReduxProvider>
         </ProviderSession>
-
       </body>
     </html>
 

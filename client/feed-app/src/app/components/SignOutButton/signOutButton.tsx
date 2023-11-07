@@ -1,33 +1,27 @@
 "use client"
 
 import { userApi } from '@/app/api/userApi'
-import { signOut, useSession } from 'next-auth/react'
+import { useAppSelector } from '@/app/hooks/reduxHooks'
+import { userSelector } from '@/app/selector/selector'
+import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
 function SignOutButton() {
-  const [user, setUser] = useState<any>({});
-  const { data: session } = useSession();
   const router = useRouter();
+  const { user } = useAppSelector(userSelector)
 
-  useEffect(() => {
-    if (session?.user?.email) {
-      userApi.getUser(session.user.email)
-        .then((response) => {
-          setUser(response?.data.data);
-        })
-        .catch((error) => {
-          console.error('Error fetching user data:', error);
-        });
-    }
-  }, [session]);
 
   const handleSignout = async () => {
-    if (user.user?.id) {
-      await userApi.logout(user.user.id);
+    if (user !== undefined) {
+      await userApi.logout(user.id);
+      await signOut();
+      router.push('/signin');
+    } else {
+      await signOut();
+      router.push('/signin');
     }
-    await signOut();
-    router.push('/'); 
+
   }
 
   return (
