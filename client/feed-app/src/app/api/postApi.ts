@@ -7,7 +7,7 @@ interface PostReq {
   data: Post;
 }
 
-const url = "http://localhost:5001/";
+const url = "http://localhost:5002/";
 
 export const postApi = {
   getAllPosts: async () => {
