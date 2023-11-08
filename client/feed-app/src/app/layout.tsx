@@ -2,8 +2,8 @@
 import Header from './components/Header/header'
 import './globals.css'
 import Footer from "@/app/components/Footer/footer"
-import ReduxProvider from './provider/reduxProvider'
-import { ProviderSession } from './provider/provider'
+import ReduxProvider from './Provider/reduxProvider'
+import { ProviderSession } from './Provider/provider'
 
 
 export default async function RootLayout({
