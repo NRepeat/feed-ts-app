@@ -6,10 +6,20 @@ import { postApi } from "@/app/api/postApi";
 import SaveButton from "../SaveButton/savebutton";
 
 export default function EditPostS() {
-  const [news, setNews] = useState('')
-  const [newNews, setNewNews] = useState('')
-  const [newsId, setNewsId] = useState('')
-  const [post, setPost] = useState({})
+  const [news, setNews] = useState<string>('')
+  const [newNews, setNewNews] = useState<string>('')
+  const [newsId, setNewsId] = useState<string>('')
+  const [post, setPost] = useState<Post>({
+    title: '',
+    guid: '',
+    categories: [],
+    pubDate: '',
+    link: '',
+    creator: '',
+    contentEncoded: '',
+    contentSnippet: '',
+  })
+  const editedNews = { news: { post, newNews, newsId } }
   const searchParams = useSearchParams()
   const search: any = searchParams.get('news')
 
@@ -21,17 +31,16 @@ export default function EditPostS() {
         const news = await postApi.getNews(encodeURIComponent(search))
         setNews(news.data.data.contentEncoded)
         setNewNews(news.data.data.contentEncoded)
-        setPost(news)
+        setPost(news.data.data)
         setNewsId(news.data.data.guid)
 
       } catch (error) {
         console.log(error)
 
       }
-
     }
     fetchNews()
-  }, [])
+  }, [search])
   const handleTitleChange = (e: any) => {
     setNewNews(e.target.value);
 
@@ -60,7 +69,7 @@ export default function EditPostS() {
         }
         } className='fixed bottom-0 w-full h-20 flex justify-center items-center bg-black group'>
 
-        <SaveButton news={{ post, newNews, newsId }}></SaveButton>
+        <SaveButton news={editedNews}></SaveButton>
 
       </div>}
     </div>

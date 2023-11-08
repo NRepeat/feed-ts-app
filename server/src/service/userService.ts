@@ -2,8 +2,11 @@ const { User } = require('../../models');
 const ApiError = require('../error/api-error');
 import 'dotenv/config';
 const bcrypt = require('bcrypt');
+interface IUser {
+  dataValues: { email: string; displayName: string; role: string; id: number; password: string };
+}
 export const UserService = {
-  registration: async (email: string, passwrod: string, displayName: string, role: string, moderatorCode) => {
+  registration: async (email: string, passwrod: string, displayName: string, role: string, moderatorCode: string) => {
     const candidate = await User.findOne({
       where: {
         email: email,
@@ -15,8 +18,8 @@ export const UserService = {
 
     moderatorCode === process.env.MODERATOR_CODE ? (role = process.env.MODERATOR_ROLE) : (role = process.env.CUSTOMER_ROLE);
     const hashPassword = await bcrypt.hash(passwrod, 3);
-    const newUser = await User.create({ email, password: hashPassword, displayName, role });
-    const { email: userEmail, id, displayName: displayUserName, role: userRole } = newUser;
+    const newUser: IUser = await User.create({ email, password: hashPassword, displayName, role });
+    const { email: userEmail, id, displayName: displayUserName, role: userRole } = newUser.dataValues;
 
     return {
       user: {
@@ -28,29 +31,30 @@ export const UserService = {
     };
   },
 
-  login: async (email, password) => {
-    const user = await User.findOne({ where: { email: email } });
+  login: async (emailUser, password) => {
+    const user: IUser = await User.findOne({ where: { email: emailUser } });
+
     if (!user) {
-      throw ApiError.BadRequest('Пользователь с таким email не найден');
+      throw ApiError.BadRequest('User with this email was not found');
     }
-    const isPassEquals = await bcrypt.compare(password, user.password);
+    const isPassEquals = await bcrypt.compare(password, user.dataValues.password);
     if (!isPassEquals) {
-      throw ApiError.BadRequest('Неверный пароль');
+      throw ApiError.BadRequest('Incorrect password');
     }
-    const { email: userEmail, id, role, displayName } = user;
+    const { email, id, role, displayName } = user.dataValues;
 
     return {
       user: {
-        userEmail,
+        email,
         id,
         role,
         displayName,
       },
     };
   },
-  getUser: async (email: any) => {
-    const user = await User.findOne({ where: { email: email } });
-    const { email: userEmail, id, role, displayName } = user;
+  getUser: async (email: string) => {
+    const user: IUser = await User.findOne({ where: { email: email } });
+    const { email: userEmail, id, role, displayName } = user.dataValues;
     return {
       user: {
         userEmail,
@@ -60,5 +64,4 @@ export const UserService = {
       },
     };
   },
-  logut: async (email: string) => {},
 };

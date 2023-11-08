@@ -4,11 +4,23 @@ import { postApi } from '@/app/api/postApi'
 import { useRouter } from 'next/navigation';
 import React from 'react'
 
-function SaveButton({ news }: any) {
+interface ISaveButton {
+
+  news: INews
+
+}
+interface INews {
+  news: {
+    post: Post,
+    newNews: string,
+    newsId: string
+  }
+}
+function SaveButton({ news }: ISaveButton) {
   const router = useRouter();
-  const handleSave = async (news: any) => {
-    news.post.data.data.contentEncoded = news.newNews
-    const newPost = news.post.data.data
+  const handleSave = async ({ news }: INews) => {
+    news.post.contentEncoded = news.newNews
+    const newPost = news.post
     const res = await postApi.update(news.newsId, newPost
     )
     if (res) {

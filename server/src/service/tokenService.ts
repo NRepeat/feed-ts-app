@@ -1,13 +1,15 @@
 import 'dotenv/config';
+const ApiError = require('../error/api-error');
 const { Status } = require('../../models');
 export const TokenService = {
-  saveStatus: async (userId, status, expire) => {
+  saveStatus: async (userId: string, status: string, expire: string) => {
     try {
       const statusData = await Status.findOne({
         where: {
           userId: userId,
         },
       });
+      console.log('🚀 ~ file: tokenService.ts:12 ~ saveStatus: ~ statusData:', statusData);
       if (statusData) {
         await statusData.update({ status: status, expire: expire });
       } else {
@@ -19,55 +21,49 @@ export const TokenService = {
         return userStatus;
       }
     } catch (error) {
-      console.error('Error:', error);
-      throw error;
+      throw ApiError.BadRequest('Error:', error);
     }
   },
-  logout: async (userId) => {
+  logout: async (userId: string) => {
     try {
       const updatedStatus = await Status.update(
         { status: false },
         {
           where: { userId: userId },
-          fields: ['status'], 
+          fields: ['status'],
         }
       );
-    
+
       if (updatedStatus[0] === 1) {
-        console.log('Status updated successfully');
+     return  updatedStatus;
       } else {
-        console.log('User not found');
+        throw ApiError.BadRequest('User not found');
       }
-    return updatedStatus;
-  }catch (error) {
-    console.error('Error updating status:', error);
-  }
-},
-login: async (userId) => {
-  try {
-    const updatedStatus = await Status.update(
-      { status: true },
-      {
-        where: { userId: userId },
-        fields: ['status'], 
-      }
-    );
-  
-    if (updatedStatus[0] === 1) {
-      console.log('Status updated successfully');
-    } else {
-      console.log('User not found');
+    } catch (error) {
+      throw ApiError.BadRequest('Error updating status:', error);
     }
-  return updatedStatus;
-}catch (error) {
-  console.error('Error updating status:', error);
-}
-},
-  findStatus: async (userId) => {
-    const userStatus = await Status.findOne( { where: { userId: userId } });
+  },
+  login: async (userId: string) => {
+    try {
+      const updatedStatus = await Status.update(
+        { status: true },
+        {
+          where: { userId: userId },
+          fields: ['status'],
+        }
+      );
+
+      if (updatedStatus[0] === 1) {
+        throw ApiError.BadRequest('Status updated successfully');
+      } else {
+        throw ApiError.BadRequest('User not found');
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  },
+  findStatus: async (userId: string) => {
+    const userStatus = await Status.findOne({ where: { userId: userId } });
     return userStatus;
   },
-udpate:async (statusId,expire) => {
-  const userStatus = await Status.update(  {expire:expire }, { where: { statusId: statusId } });
-}
 };

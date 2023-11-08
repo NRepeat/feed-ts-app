@@ -18,7 +18,7 @@ export default async function page() {
 
   return (
     <div className='min-h-screen overflow-x-hidden'>
-      <Suspense ><SortableList data={posts} /></Suspense>
+      <Suspense ><SortableList  posts={posts} /></Suspense>
 
     </div>
   )

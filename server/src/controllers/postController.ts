@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
+import { parse } from '../service/parser';
 const { Post } = require('../../models');
 const createHttpError = require('http-errors');
-import { parse } from '../service/parser';
 import 'dotenv/config';
 const feedUrl = process.env.FEED_URL;
 
@@ -24,10 +24,12 @@ module.exports.getAllParsedPosts = async (req: Request, res: Response, next: any
         console.error(`Ошибка при вставке/обновлении записи: ${error.message}`);
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
+module.exports.getAllPosts = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const posts = await Post.findAll();
     res.send({ data: posts });
@@ -35,7 +37,7 @@ module.exports.getAllPosts = async (req: Request, res: Response, next: any) => {
     next(error);
   }
 };
-module.exports.getPost = async (req: Request, res: Response, next: any) => {
+module.exports.getPost = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { newsId } = req.params;
 
@@ -45,6 +47,7 @@ module.exports.getPost = async (req: Request, res: Response, next: any) => {
     res.send({ data: news });
   } catch (error) {
     console.log(createHttpError(404, error));
+    next(error);
   }
 };
 module.exports.update = async (req: Request, res: Response, next: NextFunction) => {

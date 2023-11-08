@@ -11,18 +11,17 @@ async function Profile() {
   return (
     <div className='min-h-screen flex flex-col justify-center items-center'>
 
-      <div className='flex flex-row justify-center items-center w-2/5 border-2 p-10 rounded-md shadow-md  '>
-        {session?.user?.image ? <div className=''> <img alt="user image" className=' bg-cover' src={session?.user?.image}></img></div> :
-          <div className='w-3/4'><Image src={yser} width={130} height={130} alt='user image' /></div>}
-        <div className='w-2/4 flex h-full flex-col items-center justify-center'>
+      <div className='flex  flex-col justify-center items-center lg:w-2/5  sm:flex-row border-2 p-10 rounded-md shadow-md  '>
+        <div className='flex sm:justify-between justify-center w-full '>    {session?.user?.image ? <div className=''> <img alt="user image" className=' bg-cover' src={session?.user?.image}></img></div> :
+          <div className=''><Image src={yser} width={130} height={130} alt='user image' /></div>}</div>
+
+        <div className=' w-full flex h-full flex-col sm:items-start items-center justify-center'>
           <div className='pb-5'>Name: {session?.user?.name}</div>
           <div>Mail:  {session?.user?.email}</div>
         </div>
 
-
-
       </div>
-      <div className='pt-5 w-2/12 h-16'>
+      <div className='pt-5  w-1/3 sm:w-2/12  h-16'>
         <SignOutButton />
 
       </div>

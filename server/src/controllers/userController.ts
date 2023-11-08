@@ -1,7 +1,6 @@
 import { TokenService } from '../service/tokenService';
 import { UserService } from '../service/userService';
-const ApiError = require('../error/api-error');
-import { Request, Response, response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 module.exports.rgistration = async (req: Request, res: Response, next: any) => {
   try {
     const { email, password, name, role, moderatorCode } = req.body;
@@ -21,7 +20,7 @@ module.exports.login = async (req: Request, res: Response, next: any) => {
     next(e);
   }
 };
-module.exports.getUser = async (req: Request, res: Response, next: any) => {
+module.exports.getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.params;
     const userData = await UserService.getUser(email);
@@ -31,7 +30,7 @@ module.exports.getUser = async (req: Request, res: Response, next: any) => {
     next(error);
   }
 };
-module.exports.logout = async (req: Request, res: Response, next: any) => {
+module.exports.logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
     const logoutUser = await TokenService.logout(userId);
@@ -42,11 +41,13 @@ module.exports.logout = async (req: Request, res: Response, next: any) => {
   }
 };
 
-module.exports.setStatus = async (req: Request, res: Response, next: any) => {
+module.exports.setStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, status, expire } = req.params;
     const response = await TokenService.saveStatus(userId, status, expire);
 
     res.send({ data: response });
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };

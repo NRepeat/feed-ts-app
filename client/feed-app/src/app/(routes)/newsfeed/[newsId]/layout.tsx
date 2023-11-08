@@ -1,7 +1,7 @@
 import ScrollToTopButton from "@/app/components/ScrollToTopButton/ScrollToTopButton"
 
 export default function PageLayout({
-  children, // will be a page or nested layout
+  children, 
 }: {
   children: React.ReactNode
 }) {
@@ -10,8 +10,6 @@ export default function PageLayout({
       <main>{children}
         <ScrollToTopButton />
       </main>
-
     </>
-
   )
 }

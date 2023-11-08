@@ -1,15 +1,23 @@
 import styles from './style.module.css'
 
-const Pagination = ({ items, pageSize, currentPage, onPageChange }) => {
-  const pagesCount = Math.ceil(items / pageSize); 
- 
+
+interface IPagination {
+  items: number,
+  pageSize: number,
+  currentPage: number,
+  onPageChange: (page: number) => void
+}
+
+const Pagination = ({ items, pageSize, currentPage, onPageChange }:IPagination) => {
+  const pagesCount = Math.ceil(items / pageSize);
+
   if (pagesCount === 1) return null;
   const pages = Array.from({ length: pagesCount }, (_, i) => i + 1);
- 
-   return (
+
+  return (
     <div>
       <ul className={styles.pagination}>
-        {pages.map((page,i) => (
+        {pages.map((page, i) => (
           <li
             key={i}
             className={
@@ -24,6 +32,6 @@ const Pagination = ({ items, pageSize, currentPage, onPageChange }) => {
       </ul>
     </div>
   );
- };
- 
- export default Pagination;
+};
+
+export default Pagination;

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import "./style.css";
-import Button from "./components/LendingPageButton/button";
 import { getServerSession } from "next-auth";
 
 export default async function Home() {
@@ -13,7 +12,7 @@ export default async function Home() {
           <strong>Welcome to NEWS CORE</strong>
         </h1>
         <p className="pl-10 text-xl w-3/4 text-left text-gray-100">
-          At NEWS CORE, we're your gateway to the latest, most informative news from around the globe. Dive into a world of breaking headlines, in-depth analysis, and engaging stories. Our mission is to keep you informed, inspired, and connected.{" "}
+          At NEWS CORE, we&apos;re your gateway to the latest, most informative news from around the globe. Dive into a world of breaking headlines, in-depth analysis, and engaging stories. Our mission is to keep you informed, inspired, and connected.{" "}
           <strong>Join us on this journey of discovery and stay ahead with NEWS CORE!</strong>
         </p>
         <div className="flex gap-40 pt-20 w-full justify-center">

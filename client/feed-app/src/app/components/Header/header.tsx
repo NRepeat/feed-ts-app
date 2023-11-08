@@ -24,7 +24,7 @@ function Header() {
     }
 
     fetchUserRole();
-  }, [session?.user?.email]);
+  }, [session?.user?.email, dispatch]);
   const handleSignout = async () => {
 
     if (!user?.id) {
@@ -35,10 +35,11 @@ function Header() {
 
 
   }
-  return <><div className=' text-cyan-50 w-full h-14 flex items-center justify-between bg-cyan-900 p-3'>
-    <Link href={'/'}><strong > NEWS CORE</strong></Link>
-    <Link href={'/newsfeed'}> <div>   <button>News</button></div></Link>
-    <div>
+  return <><div className=' text-cyan-50 w-full sm:h-14 h-20 flex items-center justify-evenly sm:justify-between bg-cyan-900 p-3'>
+    <div className='flex justify-between w-full flex-col sm:flex-row'>  <Link href={'/'}><strong > NEWS CORE</strong></Link>
+      <Link href={'/newsfeed'}> <div className='sm:ml-15'>   <button>News</button></div></Link></div>
+
+    <div className='flex justify-end  w-full flex-row '>
       {session ? (
         <div className="flex space-x-4">
           {user?.role === "moderator" ? <Link href={'/moderator'}>Moderator Dashboard</Link> : <></>}

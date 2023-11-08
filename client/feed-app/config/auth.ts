@@ -1,6 +1,17 @@
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { userApi } from "@/app/api/userApi";
+import { RequestInternal } from "next-auth";
+interface Credentials {
+  username: string;
+  password: string;
+}
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
 export const autchConfig: any = {
   providers: [
     GoogleProvider({
@@ -14,19 +25,19 @@ export const autchConfig: any = {
         password: { label: "password", type: "password", required: true },
       },
 
-      async authorize(credentials: any | undefined) {
+      async authorize(
+        credentials: Record<"email" | "password", string> | undefined,
+      ): Promise<any | null> {
         if (credentials !== undefined) {
-          const credentialsEmail: string = credentials.email;
+          const credentialsEmail = credentials.email;
           const password = credentials.password;
-          const user: any = await userApi.login(credentialsEmail, password);
-          const {
-            userEmail: email,
-            id,
-            displayName: name,
-            role,
-          } = user?.data.data.user;
-          const userData = { id, name, email, role };
-          return userData;
+          const user = await userApi.login(credentialsEmail, password);
+
+          if (user && user.data && user.data.data && user.data.data.user) {
+            const { email, id, displayName: name, role } = user.data.data.user;
+            const userData = { id, name, email, role };
+            return userData;
+          }
         }
 
         return null;

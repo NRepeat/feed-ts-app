@@ -6,9 +6,7 @@ interface Posts {
 interface PostReq {
   data: Post;
 }
-interface News {
-  newsId: string;
-}
+
 const url = "http://localhost:5001/";
 
 export const postApi = {
@@ -46,7 +44,6 @@ export const postApi = {
     }
   },
   delete: async (guid: string): Promise<AxiosResponse<PostReq>> => {
-    console.log("🚀 ~ file: postApi.ts:49 ~ delete: ~ guid:", guid);
     try {
       const res = await axios.delete(`${url}posts/delete`, {
        params: { guid }, 

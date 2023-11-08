@@ -18,5 +18,5 @@ interface IUser {
   email: string;
   displayName: string;
   role: string;
-  id:number
+  id: number;
 }

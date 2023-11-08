@@ -1,6 +1,6 @@
 'use client'
 import "./style.css"
-import React, { FormEventHandler, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -48,26 +48,23 @@ function RegistrationForm() {
       if (dbUser) {
         await dispatch(getUser({ email: dbUser.data.data.user.userEmail }));
         const res = await signIn('credentials', {
-          email: dbUser.data.data.user.userEmail,
+          email: user.email,
           password: values.password,
           redirect: false,
         });
-
         if (res && !res.error) {
-
           const status = session.status === "authenticated" ? true : false
           router.push('/newsfeed');
-          await userApi.setStatus(status, dbUser.data.data.user.id, session.data?.expires)
+          if (session.data?.expires) {
+            await userApi.setStatus(status,user.id, session.data.expires)
 
-
+          }
         } else {
           console.log(res);
         }
       } else {
         setUserError(true)
       }
-
-
     } catch (error) {
       console.error(error);
     }
@@ -85,27 +82,21 @@ function RegistrationForm() {
   };
   return (
     <div className='flex  w-full min-h-screen justify-center items-center'>
-
       <Formik
-
         initialValues={initialValues}
         onSubmit={(values, actions) => {
           handleSubmitForm(values);
         }}
       >
         <Form className='w-full justify-center flex '>
-
-          <div className=' border-2 w-2/6 rounded-md shadow-2xl text-center p-5 ' >
+          <div className=' border-2 lg:w-2/6 sm:w-1/2 w-full rounded-md shadow-2xl text-center p-5 ' >
             <div className="mb-10">
               <strong className=" text-4xl ">Sign up</strong>
             </div>
-
-
             <section className='flex items-center justify-between  flex-col gap-5'>
-              <section className='flex  text-left w-1/2 flex-col'>
+              <section className='flex  text-left w-full sm:w-1/2 flex-col'>
                 <label htmlFor="name">Full name</label>
                 <Field
-
                   type="text"
                   id="name"
                   name="name"
@@ -113,10 +104,7 @@ function RegistrationForm() {
                   required
                 />
               </section>
-
-
-
-              <section className='flex  text-left w-1/2 flex-col'>
+              <section className='flex  text-left w-full sm:w-1/2 flex-col'>
                 <label htmlFor="email">Email</label>
                 <Field
                   type="email"
@@ -126,9 +114,7 @@ function RegistrationForm() {
                   required
                 />
               </section>
-
-
-              <section className='flex text-left w-1/2 flex-col'>
+              <section className='flex text-left w-full sm:w-1/2 flex-col'>
                 <label htmlFor="password">Password</label>
                 <Field
                   type="password"
@@ -137,9 +123,7 @@ function RegistrationForm() {
                   placeholder="Password"
                   required
                 /></section>
-
-              <section className='pl-3 flex w-1/2 flex-row '>
-
+              <section className='pl-3 flex w-full sm:w-1/2 flex-row '>
                 <input
                   type="checkbox"
                   checked={togle}
@@ -148,7 +132,7 @@ function RegistrationForm() {
                 />
                 <label className="pt-1" htmlFor="checkbox">If you have moderator code</label>
               </section>
-              {togle && <div className='flex w-1/2 flex-col'>
+              {togle && <div className='flexw-full sm:w-1/2 flex-col'>
                 <Field
                   type="text"
                   id="moderatorCode"
@@ -158,16 +142,8 @@ function RegistrationForm() {
               <div className="flex  justify-evenly  w-full">  <Link className="backButton transition-all" href={"/signin"}>
                 <button className="flex justify-center items-center w-full h-full "> <strong> Back to sign in</strong>  </button></Link>
                 <button className="submitButton" type="submit"> <strong>Register</strong> </button></div>
-
             </section>
-
-
-
           </div>
-
-
-
-
         </Form>
       </Formik>
       <Modal
@@ -181,7 +157,6 @@ function RegistrationForm() {
         </Box>
       </Modal>
     </div>
-
   );
 }
 

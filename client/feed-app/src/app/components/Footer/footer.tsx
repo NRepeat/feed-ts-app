@@ -1,9 +1,7 @@
 'use client'
 
-import { userApi } from '@/app/api/userApi';
-import { useSession } from 'next-auth/react'
-import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+
+import React from 'react'
 
 
 function Footer() {
