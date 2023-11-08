@@ -63,7 +63,6 @@ export const userApi = {
       const res = await axios.post(
         `${SERVER_URL}/user/status/${userId}/${status}/${expire}`
       );
-      console.log("🚀 ~ file: userApi.ts:65 ~ res :", res);
       return res;
     } catch (error) {
       console.error("Ошибка:", error);

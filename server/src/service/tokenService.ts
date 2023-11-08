@@ -9,7 +9,6 @@ export const TokenService = {
           userId: userId,
         },
       });
-      console.log('🚀 ~ file: tokenService.ts:12 ~ saveStatus: ~ statusData:', statusData);
       if (statusData) {
         await statusData.update({ status: status, expire: expire });
       } else {
@@ -35,7 +34,7 @@ export const TokenService = {
       );
 
       if (updatedStatus[0] === 1) {
-     return  updatedStatus;
+        return updatedStatus;
       } else {
         throw ApiError.BadRequest('User not found');
       }
