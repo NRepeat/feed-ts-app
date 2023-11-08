@@ -39,7 +39,6 @@ export const userApi = {
     }
   },
   logout: async (userId: number): Promise<AxiosResponse<User> | undefined> => {
-    console.log("🚀 ~ file: userApi.ts:42 ~ logout: ~ userId:", userId)
     try {
       return axios.put(`${SERVER_URL}/user/logout/${userId}`);
     } catch (error) {

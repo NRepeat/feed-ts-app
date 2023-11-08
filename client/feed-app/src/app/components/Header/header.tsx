@@ -9,6 +9,10 @@ import Link from 'next/link';
 import React, { useEffect } from 'react'
 
 function Header() {
+  const expire = new Date()
+  const status = false
+  expire.setDate(expire.getDate() + 1);
+  const expireString = expire.toISOString().split('T')[0];
   const { data: session } = useSession();
   const { user } = useAppSelector(userSelector)
   const dispatch = useAppDispatch()
@@ -27,10 +31,11 @@ function Header() {
   }, [session?.user?.email, dispatch]);
   const handleSignout = async () => {
 
-    if (!user?.id) {
+    if (user?.id) {
       signOut()
     }
     await userApi.logout(user?.id)
+    await userApi.setStatus(status, user?.id, expireString)
     signOut()
 
 

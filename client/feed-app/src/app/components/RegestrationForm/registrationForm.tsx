@@ -25,7 +25,9 @@ function RegistrationForm() {
   const { user } = useAppSelector(userSelector)
   const router = useRouter();
   const dispatch = useAppDispatch()
-  const session = useSession()
+
+  const expire = new Date()
+
   const initialValues: MyFormValues = {
     name: '',
     email: '',
@@ -48,17 +50,17 @@ function RegistrationForm() {
       if (dbUser) {
         await dispatch(getUser({ email: dbUser.data.data.user.userEmail }));
         const res = await signIn('credentials', {
-          email: user.email,
+          email: dbUser.data.data.user.userEmail,
           password: values.password,
           redirect: false,
         });
         if (res && !res.error) {
-          const status = session.status === "authenticated" ? true : false
+          const status = true
           router.push('/newsfeed');
-          if (session.data?.expires) {
-            await userApi.setStatus(status,user.id, session.data.expires)
+          expire.setDate(expire.getDate() + 1);
+          const expireString = expire.toISOString().split('T')[0];
+          await userApi.setStatus(status, dbUser.data.data.user.id, expireString)
 
-          }
         } else {
           console.log(res);
         }

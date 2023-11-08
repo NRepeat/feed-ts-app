@@ -9,13 +9,17 @@ import React from 'react'
 
 function SignOutButton() {
   const router = useRouter();
-  const { user } = useAppSelector(userSelector)
-
+  const { user }: any = useAppSelector(userSelector)
+  const expire = new Date()
+  const status = false
+  expire.setDate(expire.getDate() + 1);
+  const expireString = expire.toISOString().split('T')[0];
 
   const handleSignout = async () => {
-    if (user !== undefined) {
+    if (user === undefined) {
       await userApi.logout(user.id);
       await signOut();
+      await userApi.setStatus(status, user.id, expireString)
       router.push('/signin');
     } else {
       await signOut();
