@@ -72,11 +72,11 @@ function ModeratorDashboard({ posts }: Posts) {
     setCurrentPage(initialPage);
     setPostData(paginate(posts, currentPage, pageSize))
 
-  }, [currentPage,posts,currentPage]);
+  }, [currentPage,posts]);
 
   useEffect(() => {
     setPostData(paginate(posts, currentPage, pageSize))
-  }, [currentPage,posts,currentPage]);
+  }, [currentPage,posts]);
   const onPageChange = (page: number) => {
     setCurrentPage(page);
     saveCurrentPage(page);

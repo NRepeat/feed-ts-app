@@ -30,8 +30,8 @@ function Header() {
     fetchUserRole();
   }, [session?.user?.email, dispatch]);
   const handleSignout = async () => {
+    if (user.id === 0) {
 
-    if (user?.id) {
       signOut()
     }
     await userApi.logout(user?.id)

@@ -3,6 +3,13 @@ const ApiError = require('../error/api-error');
 import 'dotenv/config';
 const bcrypt = require('bcrypt');
 interface IUser {
+  email: string;
+  displayName: string;
+  role: string;
+  id: number;
+  password: string;
+}
+interface IUserDataValues {
   dataValues: { email: string; displayName: string; role: string; id: number; password: string };
 }
 export const UserService = {
@@ -18,7 +25,7 @@ export const UserService = {
 
     moderatorCode === process.env.MODERATOR_CODE ? (role = process.env.MODERATOR_ROLE) : (role = process.env.CUSTOMER_ROLE);
     const hashPassword = await bcrypt.hash(passwrod, 3);
-    const newUser: IUser = await User.create({ email, password: hashPassword, displayName, role });
+    const newUser: IUserDataValues = await User.create({ email, password: hashPassword, displayName, role });
     const { email: userEmail, id, displayName: displayUserName, role: userRole } = newUser.dataValues;
 
     return {
@@ -37,11 +44,11 @@ export const UserService = {
     if (!user) {
       throw ApiError.BadRequest('User with this email was not found');
     }
-    const isPassEquals = await bcrypt.compare(password, user.dataValues.password);
+    const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) {
       throw ApiError.BadRequest('Incorrect password');
     }
-    const { email, id, role, displayName } = user.dataValues;
+    const { email, id, role, displayName } = user;
 
     return {
       user: {
@@ -54,7 +61,8 @@ export const UserService = {
   },
   getUser: async (email: string) => {
     const user: IUser = await User.findOne({ where: { email: email } });
-    const { email: userEmail, id, role, displayName } = user.dataValues;
+
+    const { email: userEmail, id, role, displayName } = user;
     return {
       user: {
         userEmail,
